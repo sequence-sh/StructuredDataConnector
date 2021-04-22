@@ -1,0 +1,34 @@
+<Project Sdk="Microsoft.NET.Sdk">
+
+  <PropertyGroup>
+    <TargetFramework>net5.0</TargetFramework>
+    <GeneratePackageOnBuild>false</GeneratePackageOnBuild>
+    <RootNamespace>Reductech.EDR.Connectors.StructuredData</RootNamespace>
+    <AssemblyName>Reductech.EDR.Connectors.StructuredData</AssemblyName>
+    <Nullable>enable</Nullable>
+    <Version>0.9.0$(VersionSuffix)</Version>
+  </PropertyGroup>
+
+  <PropertyGroup>
+    <PackageId>Reductech.EDR.Connectors.StructuredData</PackageId>
+    <Title>EDR StructuredData Connector</Title>
+    <Description>A class library for using StructuredData in EDR Sequences</Description>
+    <Product>EDR</Product>
+    <PackageTags>ediscovery;forensics;edrm;automation;orchestration</PackageTags>
+
+    <PackageProjectUrl>https://gitlab.com/reductech/edr/connectors/structureddata</PackageProjectUrl>
+    <RepositoryUrl>https://gitlab.com/reductech/edr/connectors/structureddata</RepositoryUrl>
+    <PackageReleaseNotes>Please see https://gitlab.com/reductech/edr/connectors/structureddata/-/releases</PackageReleaseNotes>
+    <PackageLicenseExpression>Apache-2.0</PackageLicenseExpression>
+
+    <Authors>Reductech</Authors>
+    <Company>Reductech</Company>
+    <Copyright>Copyright (c) 2021 Reductech Ltd</Copyright>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <PackageReference Include="CsvHelper" Version="19.0.0" />
+    <PackageReference Include="Reductech.EDR.Core" Version="0.9.0-a.master.2104221023" />
+  </ItemGroup>
+
+</Project>
