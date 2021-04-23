@@ -1,4 +1,4 @@
-<Project Sdk="Microsoft.NET.Sdk">
+﻿<Project Sdk="Microsoft.NET.Sdk">
 
   <PropertyGroup>
     <TargetFramework>net5.0</TargetFramework>
@@ -27,8 +27,11 @@
   </PropertyGroup>
 
   <ItemGroup>
-    <PackageReference Include="CsvHelper" Version="27.0.1" />
-    <PackageReference Include="Reductech.EDR.Core" Version="0.8.0" />
+    <PackageReference Include="CsvHelper" Version="19.0.0" />
+    <PackageReference Include="Reductech.EDR.Core" Version="0.9.0-a.master.2104231243">
+      <ExcludeAssets>runtime</ExcludeAssets>
+    </PackageReference>
+    
   </ItemGroup>
 
 </Project>
