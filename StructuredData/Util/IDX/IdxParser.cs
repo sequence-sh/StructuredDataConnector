@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Collections.Immutable;
 using System.Linq;
 using System.Text.RegularExpressions;
 using CSharpFunctionalExtensions;
@@ -34,6 +35,26 @@ public record IdxParser(IdxParserConfiguration Config)
         RegexOptions.Compiled | RegexOptions.IgnoreCase
     );
 
+    private static EntityValue Combine(EntityValue ev1, EntityValue ev2)
+    {
+        if (ev1 is EntityValue.NestedList l1)
+        {
+            if (ev2 is EntityValue.NestedList l2)
+            {
+                return new EntityValue.NestedList(l1.Value.AddRange(l2.Value));
+            }
+
+            return new EntityValue.NestedList(l1.Value.Add(ev2));
+        }
+
+        if (ev2 is EntityValue.NestedList list2)
+        {
+            return new EntityValue.NestedList(list2.Value.Prepend(ev2).ToImmutableList());
+        }
+
+        return new EntityValue.NestedList(new[] { ev1, ev2 }.ToImmutableList());
+    }
+
     /// <summary>
     /// Parse an IDX string as an entity.
     /// </summary>
@@ -56,7 +77,7 @@ public record IdxParser(IdxParserConfiguration Config)
 
             if (propertyList.TryGetValue(fieldName, out var ep))
             {
-                var combinedValue = ep.BestValue.Combine(newValue);
+                var combinedValue = Combine(ep.BestValue, newValue);
 
                 propertyList[fieldName] =
                     new EntityProperty(
