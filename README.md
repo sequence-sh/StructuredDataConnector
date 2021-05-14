@@ -3,23 +3,29 @@
 [Reductech EDR](https://gitlab.com/reductech/edr) is a collection of
 libraries that automates cross-application e-discovery and forensic workflows.
 
-This connector contains Steps to interact with...
+This connector contains Steps to interact with structured data formats:
+    - Json
+    - CSV
+    - Concordance
+    - IDX
 
-## Steps
+There are steps to convert data to and from all of these formats.
 
-|       Step        | Description                                           | Result Type |
-| :---------------: | :---------------------------------------------------- | :---------: |
-| `CheckFileExists` | Checks if a given path exists and returns true/false. |   `bool`    |
 
 ## Examples
 
-To check if a file exists and print the result:
+To read an entity from Json, add a property and then convert it back to json
 
 ```scala
-- Print (CheckFileExists 'c:\path\to\file.txt')
+- <entity> = FromJson  "{\"Foo\":1}"
+- print <entity>['Foo'] #prints 1
+
+- <entity2> = <entity> + ('Bar': 2)
+- <json> = ToJson <entity2>
+- print <json> #{"Foo":1, "Bar": 2}
 ```
 
-### [Try StructuredData Connector](https://gitlab.com/reductech/edr/edr/-/releases)
+## [Try StructuredData Connector](https://gitlab.com/reductech/edr/edr/-/releases)
 
 Using [EDR](https://gitlab.com/reductech/edr/edr),
 the command line tool for running Sequences.
@@ -30,7 +36,7 @@ Documentation is available here: https://docs.reductech.io
 
 ## E-discovery Reduct
 
-The PowerShell Connector is part of a group of projects called
+The StructuredData Connector is part of a group of projects called
 [E-discovery Reduct](https://gitlab.com/reductech/edr)
 which consists of a collection of [Connectors](https://gitlab.com/reductech/edr/connectors)
 and a command-line application for running Sequences, called
