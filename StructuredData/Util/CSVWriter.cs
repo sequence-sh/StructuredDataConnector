@@ -149,18 +149,19 @@ public static class CSVWriter
             configuration.Quote = quoteCharacter.Value;
 
             if (alwaysQuote)
-                configuration.ShouldQuote = (_, _) => true;
+                configuration.ShouldQuote = _ => true;
         }
 
-        var options = new TypeConverterOptions { Formats = new[] { dateTimeFormat } };
-        configuration.TypeConverterOptionsCache.AddOptions<DateTime>(options);
-
         var writer = new CsvWriter(textWriter, configuration);
+
+        var options = new TypeConverterOptions { Formats = new[] { dateTimeFormat } };
+        writer.Context.TypeConverterOptionsCache.AddOptions<DateTime>(options);
+        writer.Context.TypeConverterOptionsCache.AddOptions<DateTime?>(options);
 
         var records =
             results.Value.Select(x => ConvertToObject(x, multiValueDelimiter, dateTimeFormat));
 
-        await writer.WriteRecordsAsync(records); //TODO pass an async enumerable
+        await writer.WriteRecordsAsync(records, cancellationToken); //TODO pass an async enumerable
 
         await textWriter.FlushAsync();
 
