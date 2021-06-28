@@ -144,16 +144,16 @@ public static class CSVReader
             Encoding                 = encodingEnum.Convert(),
             SanitizeForInjection     = false,
             DetectColumnCountChanges = false,
-            ReadingExceptionOccurred = HandleException,
+            ReadingExceptionOccurred = HandleException
         };
 
         if (quoteCharacter.HasValue)
         {
-            configuration.Quote        = quoteCharacter.Value;
-            configuration.IgnoreQuotes = false;
+            configuration.Quote = quoteCharacter.Value;
+            configuration.Mode  = CsvMode.RFC4180;
         }
         else
-            configuration.IgnoreQuotes = true;
+            configuration.Mode = CsvMode.Escape;
 
         if (commentCharacter.HasValue)
         {
@@ -179,9 +179,9 @@ public static class CSVReader
 
         reader.Dispose();
 
-        bool HandleException(CsvHelperException exception)
+        bool HandleException(ReadingExceptionOccurredArgs args)
         {
-            throw new ErrorException(new SingleError(location, exception, ErrorCode.CSVError));
+            throw new ErrorException(new SingleError(location, args.Exception, ErrorCode.CSVError));
         }
     }
 }
