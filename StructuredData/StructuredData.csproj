@@ -29,7 +29,7 @@
 
   <ItemGroup>
     <PackageReference Include="CsvHelper" Version="27.1.1" />
-    <PackageReference Include="Reductech.EDR.Core" Version="0.10.0">
+    <PackageReference Include="Reductech.EDR.Core" Version="0.11.0-a.master.2108251449">
       <ExcludeAssets>runtime</ExcludeAssets>
     </PackageReference>
   </ItemGroup>
