@@ -33,8 +33,8 @@ public partial class FromCSVTests : StepTestBase<FromCSV, Array<Entity>>
                     )
                 },
                 Unit.Default,
-                "(Foo: \"Hello\" Bar: \"World\")",
-                "(Foo: \"Hello 2\" Bar: \"World 2\")"
+                "('Foo': \"Hello\" 'Bar': \"World\")",
+                "('Foo': \"Hello 2\" 'Bar': \"World 2\")"
             );
 
             yield return new StepCase(
@@ -53,8 +53,8 @@ public partial class FromCSVTests : StepTestBase<FromCSV, Array<Entity>>
                     )
                 },
                 Unit.Default,
-                "(Foo: \"Hello\")",
-                "(Foo: \"Hello 2\")"
+                "('Foo': \"Hello\")",
+                "('Foo': \"Hello 2\")"
             );
 
             yield return new StepCase(
@@ -73,8 +73,8 @@ public partial class FromCSVTests : StepTestBase<FromCSV, Array<Entity>>
                     )
                 },
                 Unit.Default,
-                "(Foo: \"Hello\")",
-                "(Foo: \"Hello 2\")"
+                "('Foo': \"Hello\")",
+                "('Foo': \"Hello 2\")"
             );
         }
     }

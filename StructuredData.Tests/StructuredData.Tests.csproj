@@ -39,4 +39,19 @@
     <ProjectReference Include="..\StructuredData\StructuredData.csproj" />
   </ItemGroup>
 
+  <ItemGroup>
+    <Compile Update="SchemaExamples\Examples.Designer.cs">
+      <DesignTime>True</DesignTime>
+      <AutoGen>True</AutoGen>
+      <DependentUpon>Examples.resx</DependentUpon>
+    </Compile>
+  </ItemGroup>
+
+  <ItemGroup>
+    <EmbeddedResource Update="SchemaExamples\Examples.resx">
+      <Generator>ResXFileCodeGenerator</Generator>
+      <LastGenOutput>Examples.Designer.cs</LastGenOutput>
+    </EmbeddedResource>
+  </ItemGroup>
+
 </Project>
