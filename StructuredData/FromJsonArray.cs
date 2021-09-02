@@ -17,7 +17,7 @@ namespace Reductech.EDR.Connectors.StructuredData
 {
 
 /// <summary>
-/// Create entities from a Json Stream
+/// Extracts entities from a Json stream containing an array of entities.
 /// </summary>
 public sealed class FromJsonArray : CompoundStep<Array<Entity>>
 {
