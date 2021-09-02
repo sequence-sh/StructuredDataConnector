@@ -14,7 +14,7 @@ namespace Reductech.EDR.Connectors.StructuredData
 {
 
 /// <summary>
-/// Extracts entities from a CSV file.
+/// Extracts entities from a CSV stream.
 /// The same as FromConcordance but with different default values.
 /// </summary>
 [Alias("ConvertCSVToEntity")]
