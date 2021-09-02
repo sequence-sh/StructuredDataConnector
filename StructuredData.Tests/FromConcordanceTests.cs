@@ -27,11 +27,10 @@ public partial class FromConcordanceTests : StepTestBase<FromConcordance, Array<
                             $@"þFooþþBarþ{Environment.NewLine}þHelloþþWorldþ{Environment.NewLine}þHello 2þþWorld 2þ"
                         )
                     },
-                    Action = new Log<Entity>
-                    {
-                        Value = new GetVariable<Entity>() { Variable = VariableName.Entity }
-                    },
-                    Variable = VariableName.Entity
+                    Action = new LambdaFunction<Entity, Unit>(
+                        null,
+                        new Log<Entity> { Value = new GetAutomaticVariable<Entity>() }
+                    )
                 },
                 Unit.Default,
                 "(Foo: \"Hello\" Bar: \"World\")",
@@ -48,11 +47,10 @@ public partial class FromConcordanceTests : StepTestBase<FromConcordance, Array<
                             $@"þFooþþBarþ{Environment.NewLine}þHelloþþWorld|Earthþ{Environment.NewLine}þHello 2þþWorld 2|Earth 2þ"
                         )
                     },
-                    Action = new Log<Entity>
-                    {
-                        Value = new GetVariable<Entity> { Variable = VariableName.Entity }
-                    },
-                    Variable = VariableName.Entity
+                    Action = new LambdaFunction<Entity, Unit>(
+                        null,
+                        new Log<Entity> { Value = new GetAutomaticVariable<Entity>() }
+                    )
                 },
                 Unit.Default,
                 "(Foo: \"Hello\" Bar: [\"World\", \"Earth\"])",

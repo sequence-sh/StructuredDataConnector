@@ -27,11 +27,10 @@ public partial class FromCSVTests : StepTestBase<FromCSV, Array<Entity>>
                             $@"Foo,Bar{Environment.NewLine}Hello,World{Environment.NewLine}Hello 2,World 2"
                         )
                     },
-                    Action = new Log<Entity>
-                    {
-                        Value = new GetVariable<Entity> { Variable = VariableName.Entity }
-                    },
-                    Variable = VariableName.Entity
+                    Action = new LambdaFunction<Entity, Unit>(
+                        null,
+                        new Log<Entity> { Value = new GetAutomaticVariable<Entity>() }
+                    )
                 },
                 Unit.Default,
                 "(Foo: \"Hello\" Bar: \"World\")",
@@ -48,11 +47,10 @@ public partial class FromCSVTests : StepTestBase<FromCSV, Array<Entity>>
                             $@"Foo{Environment.NewLine}Hello,World{Environment.NewLine}Hello 2,World 2"
                         )
                     },
-                    Action = new Log<Entity>
-                    {
-                        Value = new GetVariable<Entity> { Variable = VariableName.Entity }
-                    },
-                    Variable = VariableName.Entity
+                    Action = new LambdaFunction<Entity, Unit>(
+                        null,
+                        new Log<Entity> { Value = new GetAutomaticVariable<Entity>() }
+                    )
                 },
                 Unit.Default,
                 "(Foo: \"Hello\")",
@@ -69,11 +67,10 @@ public partial class FromCSVTests : StepTestBase<FromCSV, Array<Entity>>
                             $@"#this is a comment{Environment.NewLine}Foo{Environment.NewLine}Hello,World{Environment.NewLine}Hello 2,World 2"
                         )
                     },
-                    Action = new Log<Entity>
-                    {
-                        Value = new GetVariable<Entity> { Variable = VariableName.Entity }
-                    },
-                    Variable = VariableName.Entity
+                    Action = new LambdaFunction<Entity, Unit>(
+                        null,
+                        new Log<Entity> { Value = new GetAutomaticVariable<Entity>() }
+                    )
                 },
                 Unit.Default,
                 "(Foo: \"Hello\")",
