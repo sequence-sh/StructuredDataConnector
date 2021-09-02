@@ -144,13 +144,17 @@ public static class CSVReader
             Encoding                 = encodingEnum.Convert(),
             SanitizeForInjection     = false,
             DetectColumnCountChanges = false,
-            ReadingExceptionOccurred = HandleException
+            ReadingExceptionOccurred = HandleException,
+            BadDataFound             = BadDataFound
         };
 
         if (quoteCharacter.HasValue)
         {
             configuration.Quote = quoteCharacter.Value;
             configuration.Mode  = CsvMode.RFC4180;
+
+            configuration.Escape =
+                quoteCharacter.Value; //https://github.com/JoshClose/CsvHelper/issues/1659
         }
         else
             configuration.Mode = CsvMode.Escape;
@@ -182,6 +186,15 @@ public static class CSVReader
         bool HandleException(ReadingExceptionOccurredArgs args)
         {
             throw new ErrorException(new SingleError(location, args.Exception, ErrorCode.CSVError));
+        }
+
+        void BadDataFound(BadDataFoundArgs args)
+        {
+            throw new ErrorException(
+                ErrorCode.Unknown
+                    .ToErrorBuilder($"BadData - Field:{args.Field} RawRecord:{args.RawRecord}")
+                    .WithLocationSingle(location)
+            );
         }
     }
 }
