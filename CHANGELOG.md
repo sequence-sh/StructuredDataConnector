@@ -1,3 +1,11 @@
+# v0.11.0 (2021-09-03)
+
+## Issues Closed in this Release
+
+### Maintenance
+
+- Add Concordance Parsing Tests which parse a concordance file and then apply a schema to it #9
+
 # v0.10.0 (2021-07-02)
 
 ## Issues Closed in this Release
