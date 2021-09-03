@@ -1,5 +1,7 @@
 # v0.11.0 (2021-09-03)
 
+Maintenace release - dependency updates and testing improvements.
+
 ## Issues Closed in this Release
 
 ### Maintenance
