@@ -4,7 +4,6 @@ using System.Threading;
 using System.Threading.Tasks;
 using AutoTheory;
 using Divergic.Logging.Xunit;
-using FluentAssertions;
 using Reductech.EDR.Core;
 using Reductech.EDR.Core.Abstractions;
 using Reductech.EDR.Core.Entities;
