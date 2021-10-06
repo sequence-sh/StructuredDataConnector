@@ -1,16 +1,21 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Collections.Immutable;
 using System.ComponentModel.DataAnnotations;
 using System.IO;
+using System.Linq;
 using System.Runtime.CompilerServices;
+using System.Text.Json;
+using System.Text.Json.Serialization;
 using System.Threading;
 using System.Threading.Tasks;
 using CSharpFunctionalExtensions;
-using Newtonsoft.Json;
-using Newtonsoft.Json.Linq;
+using Json.Schema;
+using Reductech.EDR.Connectors.StructuredData.Errors;
 using Reductech.EDR.Connectors.StructuredData.Logging;
 using Reductech.EDR.Core;
 using Reductech.EDR.Core.Attributes;
+using Reductech.EDR.Core.Entities;
 using Reductech.EDR.Core.Enums;
 using Reductech.EDR.Core.Internal;
 using Reductech.EDR.Core.Internal.Errors;
@@ -65,19 +70,88 @@ public sealed class FromSinger : CompoundStep<Array<Entity>>
         IStateMonad stateMonad,
         [EnumeratorCancellation] CancellationToken cancellationToken)
     {
+        Dictionary<string, JsonSchema> schemaDict = new();
+
         await foreach (var result in ReadSingerStream(stringStream, cancellationToken))
         {
             if (result.IsFailure)
                 throw new ErrorException(result.Error.WithLocation(step));
 
-            if (result.Value is SingerRecord singerRecord)
+            if (result.Value is SingerSchema singerSchema)
             {
-                yield return Entity.Create(singerRecord.Record);
+                schemaDict[singerSchema.Stream] = singerSchema.Schema;
+            }
+            else if (result.Value is SingerRecord singerRecord)
+            {
+                if (schemaDict.TryGetValue(singerRecord.Stream, out var schema))
+                {
+                    var    validationResult = schema.Validate(singerRecord.Record);
+                    string message          = validationResult.Message ?? "Unknown Violation";
+
+                    if (!validationResult.IsValid)
+                        throw new ErrorException(
+                            ErrorCodeStructuredData.SchemaViolation
+                                .ToErrorBuilder(message)
+                                .WithLocationSingle(step)
+                        );
+                }
+
+                yield return CreateEntity(singerRecord.Record);
             }
             else if (result.Value is SingerState singerState)
             {
                 LogSituationStructuredData.SingerState.Log(stateMonad, step, singerState.Value);
             }
+        }
+    }
+
+    private static Entity CreateEntity(JsonElement element)
+    {
+        var ev = CreateEntityValue(element);
+
+        if (ev is EntityValue.NestedEntity nestedEntity)
+            return nestedEntity.Value;
+
+        return new Entity(
+            ImmutableDictionary<string, EntityProperty>.Empty
+                .Add(Entity.PrimitiveKey, new EntityProperty(Entity.PrimitiveKey, ev, null, 0))
+        );
+    }
+
+    private static EntityValue CreateEntityValue(JsonElement element)
+    {
+        switch (element.ValueKind)
+        {
+            case JsonValueKind.Undefined: return EntityValue.Null.Instance;
+            case JsonValueKind.Object:
+            {
+                var dict = element.EnumerateObject()
+                    .Select(
+                        (x, i) =>
+                            new EntityProperty(x.Name, CreateEntityValue(x.Value), null, i)
+                    )
+                    .ToImmutableDictionary(x => x.Name);
+
+                var entity = new Entity(dict);
+                return new EntityValue.NestedEntity(entity);
+            }
+            case JsonValueKind.Array:
+            {
+                var list = element.EnumerateArray().Select(CreateEntityValue).ToImmutableList();
+                return new EntityValue.NestedList(list);
+            }
+            case JsonValueKind.String: return new EntityValue.String(element.GetString()!);
+            case JsonValueKind.Number:
+            {
+                if (element.TryGetInt32(out var i))
+                    return new EntityValue.Integer(i);
+
+                return new EntityValue.Double(element.GetDouble());
+            }
+            case JsonValueKind.True:  return new EntityValue.Boolean(true);
+            case JsonValueKind.False: return new EntityValue.Boolean(false);
+            case JsonValueKind.Null:  return EntityValue.Null.Instance;
+            default:                  throw new ArgumentOutOfRangeException();
         }
     }
 
@@ -87,6 +161,8 @@ public sealed class FromSinger : CompoundStep<Array<Entity>>
     {
         var (stream, encoding) = stringStream.GetStream();
 
+        var options = new JsonSerializerOptions() { Converters = { SingerJsonConverter.Instance } };
+
         var streamReader = new StreamReader(stream, encoding.Convert());
 
         while (!streamReader.EndOfStream && !cancellationToken.IsCancellationRequested)
@@ -95,10 +171,7 @@ public sealed class FromSinger : CompoundStep<Array<Entity>>
 
             if (!string.IsNullOrWhiteSpace(line))
             {
-                var obj = JsonConvert.DeserializeObject<SingerObject>(
-                    line,
-                    SingerJsonConverter.Instance
-                );
+                var obj = JsonSerializer.Deserialize<SingerObject>(line, options);
 
                 if (obj is null)
                 {
@@ -114,52 +187,68 @@ public sealed class FromSinger : CompoundStep<Array<Entity>>
 }
 
 /// <summary>
-/// Json converter for singer objects
+/// Json converter for singer entities
 /// </summary>
-public class SingerJsonConverter : JsonConverter
+public class SingerJsonConverter : JsonConverter<SingerObject>
 {
     private SingerJsonConverter() { }
 
     /// <summary>
     /// The instance
     /// </summary>
-    public static JsonConverter Instance { get; } = new SingerJsonConverter();
+    public static SingerJsonConverter Instance { get; } = new();
 
     /// <inheritdoc />
-    public override bool CanConvert(Type objectType)
+    public override SingerObject Read(
+        ref Utf8JsonReader reader,
+        Type typeToConvert,
+        JsonSerializerOptions options)
     {
-        return (objectType == typeof(SingerObject));
-    }
+        Utf8JsonReader readerClone = reader;
 
-    /// <inheritdoc />
-    public override object ReadJson(
-        JsonReader reader,
-        Type objectType,
-        object? existingValue,
-        JsonSerializer serializer)
-    {
-        JObject jo   = JObject.Load(reader);
-        var     type = jo["type"]?.Value<string>();
+        if (readerClone.TokenType != JsonTokenType.StartObject)
+            throw new JsonException();
 
-        object item = type switch
+        readerClone.Read();
+
+        if (readerClone.TokenType != JsonTokenType.PropertyName)
+            throw new JsonException();
+
+        var propertyName = readerClone.GetString();
+
+        if (propertyName is null
+         || !propertyName.Equals("Type", StringComparison.OrdinalIgnoreCase))
         {
-            "SCHEMA" => new SingerSchema(),
-            "RECORD" => new SingerRecord(),
-            "STATE"  => new SingerState(),
-            _        => throw new Exception($"Singer object has type '{type}'")
+            throw new JsonException();
+        }
+
+        readerClone.Read();
+
+        if (readerClone.TokenType != JsonTokenType.String)
+        {
+            throw new JsonException();
+        }
+
+        string typeName = readerClone.GetString()!.ToLowerInvariant();
+
+        SingerObject singerObject = typeName switch
+        {
+            "schema" => JsonSerializer.Deserialize<SingerSchema>(ref reader)!,
+            "record" => JsonSerializer.Deserialize<SingerRecord>(ref reader)!,
+            "state"  => JsonSerializer.Deserialize<SingerState>(ref reader)!,
+            _        => throw new JsonException()
         };
 
-        serializer.Populate(jo.CreateReader(), item);
-        return item;
+        return singerObject;
     }
 
     /// <inheritdoc />
-    public override bool CanWrite => false;
-
-    /// <inheritdoc />
-    public override void WriteJson(JsonWriter writer, object? value, JsonSerializer serializer)
+    public override void Write(
+        Utf8JsonWriter writer,
+        SingerObject value,
+        JsonSerializerOptions options)
     {
-        throw new NotImplementedException(); // won't be called because CanWrite returns false
+        throw new NotImplementedException();
     }
 }
 
@@ -168,18 +257,21 @@ public class SingerJsonConverter : JsonConverter
 /// <summary>
 /// A singer Record, Schema, or State
 /// </summary>
-public abstract class SingerObject { }
+public abstract class SingerObject
+{
+    [JsonPropertyName("type")] public string Type { get; set; }
+}
 
 /// <summary>
 /// A singer Record
 /// </summary>
 public sealed class SingerRecord : SingerObject
 {
-    [JsonProperty("stream")] public string Stream { get; set; }
+    [JsonPropertyName("stream")] public string Stream { get; set; }
 
-    [JsonProperty("record")] public JObject Record { get; set; }
+    [JsonPropertyName("record")] public JsonElement Record { get; set; }
 
-    [JsonProperty("time_extracted")] public DateTime TimeExtracted { get; set; }
+    [JsonPropertyName("time_extracted")] public DateTime TimeExtracted { get; set; }
 }
 
 /// <summary>
@@ -187,27 +279,19 @@ public sealed class SingerRecord : SingerObject
 /// </summary>
 public sealed class SingerSchema : SingerObject
 {
-    [JsonProperty("stream")] public string Stream { get; set; }
+    [JsonPropertyName("stream")] public string Stream { get; set; }
 
-    [JsonProperty("key_properties")] public string[] KeyProperties { get; set; }
+    [JsonPropertyName("key_properties")] public string[] KeyProperties { get; set; }
 
-    [JsonProperty("bookmark_properties")] public string[] BookmarkProperties { get; set; }
+    [JsonPropertyName("bookmark_properties")]
+    public string[] BookmarkProperties { get; set; }
 
-    [JsonProperty("properties")] public SingerSchemaProperty[] Properties { get; set; }
-}
-
-/// <summary>
-/// A schema property
-/// </summary>
-public sealed class SingerSchemaProperty : SingerObject
-{
-    [JsonProperty("type")] public string Type { get; set; }
-    [JsonProperty("format")] public string Format { get; set; }
+    [JsonPropertyName("schema")] public JsonSchema Schema { get; set; }
 }
 
 public sealed class SingerState : SingerObject
 {
-    [JsonProperty("value")] public JObject Value { get; set; }
+    [JsonPropertyName("value")] public JsonElement Value { get; set; }
 }
 #pragma warning restore CS1591 // Missing XML comment for publicly visible type or member
 #pragma warning restore 8618
