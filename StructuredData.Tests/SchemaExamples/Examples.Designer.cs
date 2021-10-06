@@ -68,15 +68,5 @@ namespace Reductech.EDR.Connectors.StructuredData.Tests.SchemaExamples {
                 return ResourceManager.GetString("LoadFile", resourceCulture);
             }
         }
-        
-        /// <summary>
-        ///   Looks up a localized string similar to {&quot;type&quot;: &quot;STATE&quot;,  &quot;value&quot;: {}}
-        ///{&quot;type&quot;: &quot;SCHEMA&quot;, &quot;stream&quot;: &quot;pull_requests&quot;, &quot;schema&quot;: {&quot;type&quot;: [&quot;null&quot;, &quot;object&quot;], &quot;selected&quot;: true, &quot;additionalProperties&quot;: false, &quot;properties&quot;: {&quot;_sdc_repository&quot;: {&quot;type&quot;: [&quot;string&quot;]}, &quot;id&quot;: {&quot;type&quot;: [&quot;null&quot;, &quot;string&quot;]}, &quot;url&quot;: {&quot;type&quot;: [&quot;null&quot;, &quot;string&quot;]}, &quot;number&quot;: {&quot;type&quot;: [&quot;null&quot;, &quot;integer&quot;]}, &quot;state&quot;: {&quot;type&quot;: [&quot;null&quot;, &quot;string&quot;]}, &quot;title&quot;: {&quot;type&quot;: [&quot;null&quot;, &quot;string&quot;]}, &quot;body&quot;: {&quot;type&quot;: [&quot;null&quot;, &quot;string&quot;]}, &quot;labels&quot;: {&quot;type&quot;: [&quot;null&quot;, &quot;array&quot;], &quot;items&quot;: {&quot;type&quot;: [&quot;n [rest of string was truncated]&qu....
-        /// </summary>
-        internal static string SingerData {
-            get {
-                return ResourceManager.GetString("SingerData", resourceCulture);
-            }
-        }
     }
 }
