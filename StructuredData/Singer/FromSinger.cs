@@ -12,13 +12,14 @@ using System.Threading.Tasks;
 using CSharpFunctionalExtensions;
 using Json.Schema;
 using Reductech.EDR.Connectors.StructuredData.Errors;
-using Reductech.EDR.Connectors.StructuredData.Logging;
 using Reductech.EDR.Core;
 using Reductech.EDR.Core.Attributes;
 using Reductech.EDR.Core.Entities;
 using Reductech.EDR.Core.Enums;
 using Reductech.EDR.Core.Internal;
 using Reductech.EDR.Core.Internal.Errors;
+using Reductech.EDR.Core.Steps;
+using Reductech.EDR.Core.Util;
 using Entity = Reductech.EDR.Core.Entity;
 
 namespace Reductech.EDR.Connectors.StructuredData.Singer
@@ -45,6 +46,7 @@ public sealed class FromSinger : CompoundStep<Array<Entity>>
             ss.Value,
             this,
             stateMonad,
+            HandleState,
             cancellationToken
         );
 
@@ -60,6 +62,14 @@ public sealed class FromSinger : CompoundStep<Array<Entity>>
     [Required]
     public IStep<StringStream> Stream { get; set; } = null!;
 
+    /// <summary>
+    /// How to handle the state
+    /// </summary>
+    [FunctionProperty(2)]
+    [DefaultValueExplanation("Log the state")]
+    public LambdaFunction<Entity, Unit> HandleState { get; set; } =
+        new(null, new Log<Entity>() { Value = new GetAutomaticVariable<Entity>() });
+
     /// <inheritdoc />
     public override IStepFactory StepFactory { get; } =
         new SimpleStepFactory<FromSinger, Array<Entity>>();
@@ -68,9 +78,11 @@ public sealed class FromSinger : CompoundStep<Array<Entity>>
         StringStream stringStream,
         IStep step,
         IStateMonad stateMonad,
+        LambdaFunction<Entity, Unit> handleState,
         [EnumeratorCancellation] CancellationToken cancellationToken)
     {
-        Dictionary<string, JsonSchema> schemaDict = new();
+        Dictionary<string, JsonSchema> schemaDict   = new();
+        var                            currentState = stateMonad.GetState().ToImmutableDictionary();
 
         await foreach (var result in ReadSingerStream(stringStream, cancellationToken))
         {
@@ -100,7 +112,23 @@ public sealed class FromSinger : CompoundStep<Array<Entity>>
             }
             else if (result.Value is SingerState singerState)
             {
-                LogSituationStructuredData.SingerState.Log(stateMonad, step, singerState.Value);
+                var stateEntity = CreateEntity(singerState.Value);
+
+                var scopedMonad = new ScopedStateMonad(
+                    stateMonad,
+                    currentState,
+                    handleState.VariableNameOrItem,
+                    new KeyValuePair<VariableName, object>(
+                        handleState.VariableNameOrItem,
+                        stateEntity
+                    )
+                );
+
+                var handleStateResult =
+                    await handleState.StepTyped.Run(scopedMonad, cancellationToken);
+
+                if (handleStateResult.IsFailure)
+                    throw new ErrorException(handleStateResult.Error);
             }
         }
     }

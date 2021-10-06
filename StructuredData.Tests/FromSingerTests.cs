@@ -31,6 +31,7 @@ public partial class FromSingerTests : StepTestBase<FromSinger, Array<Entity>>
                 "Read Singer Data",
                 step,
                 Unit.Default,
+                "()",
                 "('a': 1)",
                 "('a': 2)"
             );
@@ -58,7 +59,8 @@ public partial class FromSingerTests : StepTestBase<FromSinger, Array<Entity>>
         {
             foreach (var errorCase in base.ErrorCases)
             {
-                yield return errorCase;
+                if (!errorCase.Name.Contains("HandleState Error"))
+                    yield return errorCase;
             }
 
             const string testDataWithWrongSchema = @"
@@ -77,6 +79,19 @@ public partial class FromSingerTests : StepTestBase<FromSinger, Array<Entity>>
                 ErrorCodeStructuredData.SchemaViolation
                     .ToErrorBuilder("Unknown Violation")
                     .WithLocationSingle(fromSingerStep)
+            );
+        }
+    }
+
+    /// <inheritdoc />
+    protected override IEnumerable<SerializeCase> SerializeCases
+    {
+        get
+        {
+            yield return new SerializeCase(
+                "Default Serialization",
+                new FromSinger() { Stream = new StringConstant("Bar0") },
+                "FromSinger Stream: \"Bar0\" HandleState: (<> => Log Value: <>)"
             );
         }
     }
