@@ -4,7 +4,6 @@ using System.Threading;
 using System.Threading.Tasks;
 using AutoTheory;
 using Divergic.Logging.Xunit;
-using FluentAssertions;
 using Reductech.EDR.Core;
 using Reductech.EDR.Core.Abstractions;
 using Reductech.EDR.Core.Entities;
@@ -21,7 +20,7 @@ namespace Reductech.EDR.Connectors.StructuredData.Tests.SchemaExamples
 {
 
 [UseTestOutputHelper]
-public partial class SchemaExamples
+public partial class UssecSchemaExamples
 {
     public static SchemaProperty ExactlyOneString =
         new() { Multiplicity = Multiplicity.ExactlyOne, Type = SCLType.String };
@@ -199,7 +198,9 @@ public partial class SchemaExamples
             }
         };
 
-        TestOutputHelper.WriteLine(step.Serialize());
+        var serializedStep = step.Serialize();
+
+        TestOutputHelper.WriteLine(serializedStep);
 
         var sm = new StateMonad(
             new TestOutputLogger("Logger", TestOutputHelper),
@@ -214,144 +215,72 @@ public partial class SchemaExamples
     }
 
     public static readonly Schema USSecSchema = new()
-        //https://www.sec.gov/divisions/enforce/datadeliverystandards.pdf
+    {
+        Name = "United States Securities and Exchange Commission Data Delivery Standards",
+        DefaultErrorBehavior = ErrorBehavior.Error,
+        ExtraProperties = ExtraPropertyBehavior.Remove,
+        Properties = new Dictionary<string, SchemaProperty>
         {
-            Name = "United States Securities and Exchange Commission Data Delivery Standards",
-            DefaultErrorBehavior = ErrorBehavior.Error,
-            ExtraProperties = ExtraPropertyBehavior.Remove,
-            Properties = new Dictionary<string, SchemaProperty>
+            { "FIRSTBATES", ExactlyOneString }, //First Bates number of native file document/email
+            { "LASTBATES", ExactlyOneString },  //Last Bates number of native file document/email
             {
-                {
-                    "FIRSTBATES", ExactlyOneString
-                }, //First Bates number of native file document/email
-                { "LASTBATES", ExactlyOneString }, //Last Bates number of native file document/email
-                {
-                    "ATTACHRANGE", ExactlyOneString
-                }, //Bates number of the first page of the parent document to the Bates number of the last page of the last attachment “child” document
-                { "BEGATTACH", ExactlyOneString }, //First Bates number of attachment range
-                { "ENDATTACH", ExactlyOneString }, //Last Bates number of attachment range
-                { "PARENT_BATES", UpToOneString },
-                { "CHILD_BATES", AnyMultiplicityString },
-                { "CUSTODIAN", ExactlyOneString },
-                { "FROM", AtLeastOneString },
-                { "TO", AnyMultiplicityString },
-                { "CC", AnyMultiplicityString },
-                { "BCC", AnyMultiplicityString },
-                { "SUBJECT", ExactlyOneString },
-                { "FILE_NAME", UpToOneString },
-                { "DATE_SENT", UpToOneUSDate },
-                { "TIME_SENT/TIME_ZONE", UpToOneUSTime },
-                { "TIME_ZONE", UpToOneString },
-                { "LINK", UpToOneString },
-                { "MIME_TYPE", ExactlyOneString },
-                { "FILE_EXTEN", ExactlyOneString },
-                { "AUTHOR", UpToOneString },
-                { "LAST_AUTHOR", UpToOneString },
-                { "DATE_CREATED", UpToOneUSDate },
-                { "TIME_CREATED/TIME_ZONE", UpToOneUSTime },
-                { "DATE_MOD", UpToOneUSDate },
-                { "TIME_MOD/TIME_ZONE", UpToOneUSTime },
-                { "DATE_ACCESSD", UpToOneUSDate },
-                { "TIME_ACCESSD/TIME_ZONE", UpToOneUSTime },
-                { "PRINTED_DATE", UpToOneUSDate },
-                {
-                    "FILE_SIZE",
-                    new SchemaProperty
-                    {
-                        Multiplicity = Multiplicity.ExactlyOne, Type = SCLType.Integer
-                    }
-                },
-                {
-                    "PGCOUNT",
-                    new SchemaProperty
-                    {
-                        Multiplicity = Multiplicity.ExactlyOne, Type = SCLType.Integer
-                    }
-                },
-                { "PATH", UpToOneString },
-                { "INTFILEPATH", UpToOneString },
-                { "INTMSGID", UpToOneString },
-                { "HEADER", UpToOneString },
-                {
-                    "MD5HASH", UpToOneString with
-                    {
-                        Regex =
-                        //lang=regex
-                        "[0-9a-f]+"
-                    }
-                },
-                { "OCRPATH", ExactlyOneString },
-            }.ToImmutableSortedDictionary()
-        };
-
-    public static readonly Schema EDRMSchema = new()
-        //https://www.sec.gov/divisions/enforce/datadeliverystandards.pdf
-        {
-            Name = "United States Securities and Exchange Commission Data Delivery Standards",
-            DefaultErrorBehavior = ErrorBehavior.Error,
-            ExtraProperties = ExtraPropertyBehavior.Warn,
-            Properties = new Dictionary<string, SchemaProperty>
+                "ATTACHRANGE", ExactlyOneString
+            }, //Bates number of the first page of the parent document to the Bates number of the last page of the last attachment “child” document
+            { "BEGATTACH", ExactlyOneString }, //First Bates number of attachment range
+            { "ENDATTACH", ExactlyOneString }, //Last Bates number of attachment range
+            { "PARENT_BATES", UpToOneString },
+            { "CHILD_BATES", AnyMultiplicityString },
+            { "CUSTODIAN", ExactlyOneString },
+            { "FROM", AtLeastOneString },
+            { "TO", AnyMultiplicityString },
+            { "CC", AnyMultiplicityString },
+            { "BCC", AnyMultiplicityString },
+            { "SUBJECT", ExactlyOneString },
+            { "FILE_NAME", UpToOneString },
+            { "DATE_SENT", UpToOneUSDate },
+            { "TIME_SENT/TIME_ZONE", UpToOneUSTime },
+            { "TIME_ZONE", UpToOneString },
+            { "LINK", UpToOneString },
+            { "MIME_TYPE", ExactlyOneString },
+            { "FILE_EXTEN", ExactlyOneString },
+            { "AUTHOR", UpToOneString },
+            { "LAST_AUTHOR", UpToOneString },
+            { "DATE_CREATED", UpToOneUSDate },
+            { "TIME_CREATED/TIME_ZONE", UpToOneUSTime },
+            { "DATE_MOD", UpToOneUSDate },
+            { "TIME_MOD/TIME_ZONE", UpToOneUSTime },
+            { "DATE_ACCESSD", UpToOneUSDate },
+            { "TIME_ACCESSD/TIME_ZONE", UpToOneUSTime },
+            { "PRINTED_DATE", UpToOneUSDate },
             {
-                { "ATTACHMENTIDS", ExactlyOneString }, //Docids of attachment(s) to email/edoc
-
+                "FILE_SIZE",
+                new SchemaProperty
                 {
-                    "BATES RANGE", ExactlyOneString
-                }, //Begin and end bates number of a document if it differs from DocID; this can be provided in one bates range field or 2 separate fields for the beginning and ending number
-
-                { "BCC", AnyMultiplicityString }, //Names of persons blind copied on an email
-
-                { "CC", AnyMultiplicityString }, //Names of persons copied on an email
-
-                { "CUSTODIAN", ExactlyOneString }, //Name of person from whom the file was obtained
-
-                { "DATERECEIVED", UpToOneUKDate }, //Date email was received
-
-                { "DATESENT", UpToOneUKDate }, //Date email was sent
-
-                { "DOCEXT", ExactlyOneString }, //Extension of native document
-
-                { "DOCID", ExactlyOneString }, //Extension of native document
+                    Multiplicity = Multiplicity.ExactlyOne, Type = SCLType.Integer
+                }
+            },
+            {
+                "PGCOUNT",
+                new SchemaProperty
                 {
-                    "DOCLINK", ExactlyOneString
-                }, //Full relative path to the current location of the native or near-native document used to link metadata to native or near native file
-
+                    Multiplicity = Multiplicity.ExactlyOne, Type = SCLType.Integer
+                }
+            },
+            { "PATH", UpToOneString },
+            { "INTFILEPATH", UpToOneString },
+            { "INTMSGID", UpToOneString },
+            { "HEADER", UpToOneString },
+            {
+                "MD5HASH", UpToOneString with
                 {
-                    "FILENAME", ExactlyOneString
-                }, //Name of the original native file as it existed at the time of collection
-
-                {
-                    "FOLDER", ExactlyOneString
-                }, //File path/folder structure for the original native file as it existed at the time of collection
-
-                { "FROM", UpToOneString }, //Name of person sending an email
-
-                {
-                    "HASH", UpToOneString
-                }, //Identifying value of an electronic record – used for deduplication and authentication; hash value is typically MD5 or SHA1
-
-                { "PARENTID", UpToOneString }, //DocId of the parent document
-
-                {
-                    "RCRDTYPE", ExactlyOneString
-                }, //Indicates document type, i.e., email; attachment; edoc; scanned; etc.
-
-                { "SUBJECT", UpToOneString }, //Subject line of an email
-
-                { "TIMERECEIVED", UpToOneUKTime }, //Time email was received in user’s mailbox
-
-                { "TIMESENT", UpToOneUKTime }, //Time email was sent
-
-                { "TO", AnyMultiplicityString }, //Name(s) of person(s) receiving email
-
-                { "AUTHORS", UpToOneString }, //Name of person creating document
-
-                { "DATECREATED", UpToOneUKDate }, //Date document was created
-
-                { "DATESAVED", UpToOneUKDate }, //Date document was last saved
-
-                { "DOCTITLE", UpToOneString }, //Title given to native file
-            }.ToImmutableSortedDictionary()
-        };
+                    Regex =
+                    //lang=regex
+                    "[0-9a-f]+"
+                }
+            },
+            { "OCRPATH", ExactlyOneString },
+        }.ToImmutableSortedDictionary()
+    };
 }
 
 }
