@@ -1,13 +1,15 @@
 ﻿using System.ComponentModel.DataAnnotations;
+using System.Text.Json;
+using System.Text.Json.Serialization;
 using System.Threading;
 using System.Threading.Tasks;
 using CSharpFunctionalExtensions;
-using Newtonsoft.Json;
 using Reductech.EDR.Core;
 using Reductech.EDR.Core.Attributes;
 using Reductech.EDR.Core.Entities;
 using Reductech.EDR.Core.Internal;
 using Reductech.EDR.Core.Internal.Errors;
+using Reductech.EDR.Core.Util;
 using Entity = Reductech.EDR.Core.Entity;
 
 namespace Reductech.EDR.Connectors.StructuredData
@@ -23,22 +25,20 @@ public sealed class ToJson : CompoundStep<StringStream>
         IStateMonad stateMonad,
         CancellationToken cancellationToken)
     {
-        var entity = await Entity.Run(stateMonad, cancellationToken);
+        var result = await stateMonad.RunStepsAsync(Entity, FormatOutput, cancellationToken);
 
-        if (entity.IsFailure)
-            return entity.ConvertFailure<StringStream>();
+        if (result.IsFailure)
+            return result.ConvertFailure<StringStream>();
 
-        var formatResult = await FormatOutput.Run(stateMonad, cancellationToken);
+        var (entity, writeIndented) = result.Value;
 
-        if (formatResult.IsFailure)
-            return formatResult.ConvertFailure<StringStream>();
-
-        var formatting = formatResult.Value ? Formatting.Indented : Formatting.None;
-
-        var jsonString = JsonConvert.SerializeObject(
-            entity.Value,
-            formatting,
-            EntityJsonConverter.Instance
+        var jsonString = JsonSerializer.Serialize(
+            entity,
+            new JsonSerializerOptions()
+            {
+                Converters    = { new JsonStringEnumConverter(), VersionJsonConverter.Instance },
+                WriteIndented = writeIndented
+            }
         );
 
         return new StringStream(jsonString);

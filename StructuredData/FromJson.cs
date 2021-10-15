@@ -1,10 +1,11 @@
 ﻿using System;
 using System.ComponentModel.DataAnnotations;
+using System.Text.Json;
+using System.Text.Json.Serialization;
 using System.Threading;
 using System.Threading.Tasks;
 using CSharpFunctionalExtensions;
 using Microsoft.Extensions.Logging;
-using Newtonsoft.Json;
 using Reductech.EDR.Core;
 using Reductech.EDR.Core.Attributes;
 using Reductech.EDR.Core.Entities;
@@ -35,9 +36,15 @@ public sealed class FromJson : CompoundStep<Entity>
 
         try
         {
-            entity = JsonConvert.DeserializeObject<Entity>(
+            entity = JsonSerializer.Deserialize<Entity>(
                 text.Value,
-                EntityJsonConverter.Instance
+                new JsonSerializerOptions()
+                {
+                    Converters =
+                    {
+                        new JsonStringEnumConverter(), VersionJsonConverter.Instance
+                    }
+                }
             );
         }
         catch (Exception e)
