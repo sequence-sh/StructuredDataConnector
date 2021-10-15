@@ -128,7 +128,7 @@ public partial class UssecSchemaExamples
                             new EntitySetValue<int>
                             {
                                 Value =
-                                    new ValueIf<int>()
+                                    new If<int>()
                                     {
                                         Condition = new Not()
                                         {
@@ -156,27 +156,47 @@ public partial class UssecSchemaExamples
                                                                 {
                                                                     new StringToDouble
                                                                     {
-                                                                        Double = new RegexReplace
-                                                                        {
-                                                                            String =
-                                                                                new EntityGetValue<
-                                                                                    StringStream>
-                                                                                {
-                                                                                    Entity =
-                                                                                        GetEntityVariable,
-                                                                                    Property =
-                                                                                        Constant(
-                                                                                            "File Size"
-                                                                                        ),
-                                                                                },
-                                                                            Pattern =
-                                                                                Constant(
-                                                                                    "\\s*kb\\s*"
+                                                                        Double =
+                                                                            new RegexReplace()
+                                                                            {
+                                                                                String =
+                                                                                    new RegexReplace
+                                                                                    {
+                                                                                        String =
+                                                                                            new
+                                                                                                EntityGetValue
+                                                                                                <
+                                                                                                    StringStream>
+                                                                                                {
+                                                                                                    Entity =
+                                                                                                        GetEntityVariable,
+                                                                                                    Property =
+                                                                                                        Constant(
+                                                                                                            "File Size"
+                                                                                                        ),
+                                                                                                },
+                                                                                        Pattern =
+                                                                                            Constant(
+                                                                                                "\\s*kb\\s*"
+                                                                                            ),
+                                                                                        IgnoreCase =
+                                                                                            Constant(
+                                                                                                true
+                                                                                            ),
+                                                                                        Replace =
+                                                                                            Constant(
+                                                                                                ""
+                                                                                            )
+                                                                                    },
+                                                                                Pattern = Constant(
+                                                                                    "null"
                                                                                 ),
-                                                                            IgnoreCase =
-                                                                                Constant(true),
-                                                                            Replace = Constant("")
-                                                                        }
+                                                                                IgnoreCase =
+                                                                                    Constant(true),
+                                                                                Replace = Constant(
+                                                                                    "0"
+                                                                                )
+                                                                            }
                                                                     },
                                                                     Constant(1000d)
                                                                 }
@@ -206,6 +226,7 @@ public partial class UssecSchemaExamples
             new TestOutputLogger("Logger", TestOutputHelper),
             StepFactoryStore.CreateFromAssemblies(typeof(FromConcordance).Assembly),
             ExternalContext.Default,
+            DefaultRestClientFactory.Instance,
             new Dictionary<string, object>()
         );
 

@@ -1,13 +1,15 @@
 ﻿using System.ComponentModel.DataAnnotations;
+using System.Text.Json;
+using System.Text.Json.Serialization;
 using System.Threading;
 using System.Threading.Tasks;
 using CSharpFunctionalExtensions;
-using Newtonsoft.Json;
 using Reductech.EDR.Core;
 using Reductech.EDR.Core.Attributes;
 using Reductech.EDR.Core.Entities;
 using Reductech.EDR.Core.Internal;
 using Reductech.EDR.Core.Internal.Errors;
+using Reductech.EDR.Core.Util;
 using Entity = Reductech.EDR.Core.Entity;
 
 namespace Reductech.EDR.Connectors.StructuredData
@@ -23,28 +25,24 @@ public sealed class ToJsonArray : CompoundStep<StringStream>
         IStateMonad stateMonad,
         CancellationToken cancellationToken)
     {
-        //TODO maybe stream the result?
-        var list = await Entities.Run(stateMonad, cancellationToken);
+        var result = await stateMonad.RunStepsAsync(
+            Entities.WrapArray(),
+            FormatOutput,
+            cancellationToken
+        );
 
-        if (list.IsFailure)
-            return list.ConvertFailure<StringStream>();
+        if (result.IsFailure)
+            return result.ConvertFailure<StringStream>();
 
-        var formatResult = await FormatOutput.Run(stateMonad, cancellationToken);
+        var (list, writeIndented) = result.Value;
 
-        if (formatResult.IsFailure)
-            return formatResult.ConvertFailure<StringStream>();
-
-        var formatting = formatResult.Value ? Formatting.Indented : Formatting.None;
-
-        var elements = await list.Value.GetElementsAsync(cancellationToken);
-
-        if (elements.IsFailure)
-            return elements.ConvertFailure<StringStream>();
-
-        var jsonString = JsonConvert.SerializeObject(
-            elements.Value,
-            formatting,
-            EntityJsonConverter.Instance
+        var jsonString = JsonSerializer.Serialize(
+            list,
+            new JsonSerializerOptions()
+            {
+                Converters    = { new JsonStringEnumConverter(), VersionJsonConverter.Instance },
+                WriteIndented = writeIndented
+            }
         );
 
         return new StringStream(jsonString);
