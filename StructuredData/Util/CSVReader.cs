@@ -11,6 +11,7 @@ using Reductech.EDR.Core;
 using Reductech.EDR.Core.Enums;
 using Reductech.EDR.Core.Internal;
 using Reductech.EDR.Core.Internal.Errors;
+using Reductech.EDR.Core.Util;
 using Entity = Reductech.EDR.Core.Entity;
 
 namespace Reductech.EDR.Connectors.StructuredData.Util
@@ -21,6 +22,45 @@ namespace Reductech.EDR.Connectors.StructuredData.Util
 /// </summary>
 public static class CSVReader
 {
+    private record CharMap : IStepValueMap<StringStream, char?>
+    {
+        public string PropertyName { get; }
+        public ErrorLocation ErrorLocation { get; }
+
+        public CharMap(string propertyName, ErrorLocation errorLocation)
+        {
+            PropertyName  = propertyName;
+            ErrorLocation = errorLocation;
+        }
+
+        /// <inheritdoc />
+        public async Task<Result<char?, IError>> Map(
+            StringStream t,
+            CancellationToken cancellationToken)
+        {
+            var stringResult = await t.GetStringAsync();
+
+            char? resultChar;
+
+            if (stringResult.Length == 0)
+                resultChar = null;
+            else if (stringResult.Length == 1)
+                resultChar = stringResult.Single();
+            else
+                return new SingleError(
+                    ErrorLocation,
+                    ErrorCode.SingleCharacterExpected,
+                    PropertyName,
+                    stringResult
+                );
+
+            return resultChar;
+        }
+    }
+
+    private static IRunnableStep<char?> WrapChar(IStep<StringStream> step, string name) =>
+        step.WrapStep(new CharMap(name, step.TextLocation!));
+
     /// <summary>
     /// Reads a CSV stream to an entity stream based on all the input steps.
     /// </summary>
@@ -35,94 +75,32 @@ public static class CSVReader
         ErrorLocation errorLocation,
         CancellationToken cancellationToken)
     {
-        var testStreamResult = await stream.Run(stateMonad, cancellationToken);
-
-        if (testStreamResult.IsFailure)
-            return testStreamResult.ConvertFailure<Array<Entity>>();
-
-        var delimiterResult = await delimiter.Run(stateMonad, cancellationToken)
-            .Map(async x => await x.GetStringAsync());
-
-        if (delimiterResult.IsFailure)
-            return delimiterResult.ConvertFailure<Array<Entity>>();
-
-        var quoteResult = await TryConvertToChar(
-            quoteCharacter,
-            "Quote Character",
-            stateMonad,
-            errorLocation,
+        var stuff = await stateMonad.RunStepsAsync(
+            stream,
+            delimiter.WrapStringStream(),
+            WrapChar(commentCharacter,    nameof(commentCharacter)),
+            WrapChar(quoteCharacter,      nameof(quoteCharacter)),
+            WrapChar(multiValueDelimiter, nameof(multiValueDelimiter)),
             cancellationToken
         );
 
-        if (quoteResult.IsFailure)
-            return quoteResult.ConvertFailure<Array<Entity>>();
+        if (stuff.IsFailure)
+            return stuff.ConvertFailure<Array<Entity>>();
 
-        var commentResult = await TryConvertToChar(
-            commentCharacter,
-            "Comment Character",
-            stateMonad,
-            errorLocation,
-            cancellationToken
-        );
-
-        if (commentResult.IsFailure)
-            return commentResult.ConvertFailure<Array<Entity>>();
-
-        var multiValueResult = await TryConvertToChar(
-            multiValueDelimiter,
-            "MultiValue Delimiter",
-            stateMonad,
-            errorLocation,
-            cancellationToken
-        );
-
-        if (multiValueResult.IsFailure)
-            return multiValueResult.ConvertFailure<Array<Entity>>();
+        var (streamResult, delimiterResult, commentResult, quoteResult, multiValueDelimiterResult) =
+            stuff.Value;
 
         var asyncEnumerable = ReadCSV(
-                testStreamResult.Value,
-                delimiterResult.Value,
-                quoteResult.Value,
-                commentResult.Value,
-                multiValueResult.Value,
+                streamResult,
+                delimiterResult,
+                quoteResult,
+                commentResult,
+                multiValueDelimiterResult,
                 errorLocation
             )
             .ToSCLArray();
 
         return asyncEnumerable;
-    }
-
-    /// <summary>
-    /// Tries to convert a string step to a single nullable character.
-    /// </summary>
-    public static async Task<Result<char?, IError>> TryConvertToChar(
-        IStep<StringStream> step,
-        string propertyName,
-        IStateMonad stateMonad,
-        ErrorLocation errorLocation,
-        CancellationToken cancellationToken)
-    {
-        var charResult = await step.Run(stateMonad, cancellationToken)
-            .Map(async x => await x.GetStringAsync());
-
-        if (charResult.IsFailure)
-            return charResult.ConvertFailure<char?>();
-
-        char? resultChar;
-
-        if (charResult.Value.Length == 0)
-            resultChar = null;
-        else if (charResult.Value.Length == 1)
-            resultChar = charResult.Value.Single();
-        else
-            return new SingleError(
-                errorLocation,
-                ErrorCode.SingleCharacterExpected,
-                propertyName,
-                charResult.Value
-            );
-
-        return resultChar;
     }
 
     /// <summary>
