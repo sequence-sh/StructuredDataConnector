@@ -175,7 +175,7 @@ public static class CSVWriter
 
             foreach (var entityProperty in entity)
             {
-                var s = entityProperty.BestValue.GetFormattedString(delimiter, dateTimeFormat);
+                var s = entityProperty.Value.GetFormattedString(delimiter, dateTimeFormat);
 
                 expandoObject[entityProperty.Name] = s;
             }
