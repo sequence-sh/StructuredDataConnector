@@ -1,11 +1,11 @@
 ﻿using System.Collections.Generic;
-using System.Collections.Immutable;
 using AutoTheory;
-using Reductech.EDR.Core;
+using Json.Schema;
 using Reductech.EDR.Core.Entities;
-using Reductech.EDR.Core.Enums;
 using Reductech.EDR.Core.Internal.Serialization;
 using Xunit;
+using static Reductech.EDR.Core.TestHarness.SchemaHelpers;
+using static Reductech.EDR.Connectors.StructuredData.Tests.SchemaExamples.SchemaHelpers;
 
 namespace Reductech.EDR.Connectors.StructuredData.Tests.SchemaExamples
 {
@@ -13,122 +13,95 @@ namespace Reductech.EDR.Connectors.StructuredData.Tests.SchemaExamples
 [UseTestOutputHelper]
 public partial class EDRMSchemaExamples
 {
-    public static SchemaProperty ExactlyOneString =
-        new() { Multiplicity = Multiplicity.ExactlyOne, Type = SCLType.String };
-
-    public static SchemaProperty UpToOneString =
-        new() { Multiplicity = Multiplicity.UpToOne, Type = SCLType.String };
-
-    public static SchemaProperty AnyMultiplicityString =
-        new() { Multiplicity = Multiplicity.Any, Type = SCLType.String };
-
-    public static SchemaProperty AtLeastOneString =
-        new() { Multiplicity = Multiplicity.Any, Type = SCLType.String };
-
-    public static SchemaProperty UpToOneUSDate = new()
-    {
-        Multiplicity     = Multiplicity.UpToOne,
-        Type             = SCLType.Date,
-        DateOutputFormat = "MM/dd/yyyy"
-    };
-
-    public static SchemaProperty UpToOneUSTime = new()
-    {
-        Multiplicity     = Multiplicity.UpToOne,
-        Type             = SCLType.Date,
-        DateOutputFormat = "hh:mm tt zzz"
-    };
-
-    public static SchemaProperty UpToOneUKDate = new()
-    {
-        Multiplicity     = Multiplicity.UpToOne,
-        Type             = SCLType.Date,
-        DateOutputFormat = "yyyy/MM/dd"
-    };
-
-    public static SchemaProperty UpToOneUKTime = new()
-    {
-        Multiplicity     = Multiplicity.UpToOne,
-        Type             = SCLType.Date,
-        DateOutputFormat = "HH:mm:ss zzz"
-    };
-
     [Fact]
-    public void USSecSchemaShouldMatchText()
+    public void EDRMSchemaShouldMatchText()
     {
         var formatText = EDRMSchema.ConvertToEntity().Format();
 
         TestOutputHelper.WriteLine(formatText);
     }
 
-    //https://edrm.net/resources/frameworks-and-standards/edrm-model/edrm-stages-standards/edrm-production-standards-version-1/
-    public static readonly Schema EDRMSchema = new()
-    {
-        Name                 = "EDRM Production Standards",
-        DefaultErrorBehavior = ErrorBehavior.Error,
-        ExtraProperties      = ExtraPropertyBehavior.Warn,
-        Properties = new Dictionary<string, SchemaProperty>
-        {
-            { "ATTACHMENTIDS", ExactlyOneString }, //Docids of attachment(s) to email/edoc
-
+    /// <summary>
+    /// The Schema for EDRM documents
+    /// //https://edrm.net/resources/frameworks-and-standards/edrm-model/edrm-stages-standards/edrm-production-standards-version-1/
+    /// </summary>
+    public static readonly JsonSchema EDRMSchema = new JsonSchemaBuilder()
+        .Title("EDRM Production Standards")
+        .AdditionalProperties(JsonSchema.False)
+        .Type(SchemaValueType.Object)
+        .Required(
+            "ATTACHMENTIDS",
+            "BATES RANGE",
+            "CUSTODIAN",
+            "DOCEXT",
+            "DOCID",
+            "DOCLINK",
+            "FILENAME",
+            "RCRDTYPE"
+        )
+        .Properties(
+            new Dictionary<string, JsonSchema>()
             {
-                "BATES RANGE", ExactlyOneString
-            }, //Begin and end bates number of a document if it differs from DocID; this can be provided in one bates range field or 2 separate fields for the beginning and ending number
+                { "ATTACHMENTIDS", AnyString }, //Docids of attachment(s) to email/edoc
 
-            { "BCC", AnyMultiplicityString }, //Names of persons blind copied on an email
+                {
+                    "BATES RANGE", AnyString
+                }, //Begin and end bates number of a document if it differs from DocID; this can be provided in one bates range field or 2 separate fields for the beginning and ending number
 
-            { "CC", AnyMultiplicityString }, //Names of persons copied on an email
+                { "BCC", StringArray }, //Names of persons blind copied on an email
 
-            { "CUSTODIAN", ExactlyOneString }, //Name of person from whom the file was obtained
+                { "CC", StringArray }, //Names of persons copied on an email
 
-            { "DATERECEIVED", UpToOneUKDate }, //Date email was received
+                { "CUSTODIAN", AnyString }, //Name of person from whom the file was obtained
 
-            { "DATESENT", UpToOneUKDate }, //Date email was sent
+                { "DATERECEIVED", UKDate }, //Date email was received
 
-            { "DOCEXT", ExactlyOneString }, //Extension of native document
+                { "DATESENT", UKDate }, //Date email was sent
 
-            { "DOCID", ExactlyOneString }, //Extension of native document
-            {
-                "DOCLINK", ExactlyOneString
-            }, //Full relative path to the current location of the native or near-native document used to link metadata to native or near native file
+                { "DOCEXT", AnyString }, //Extension of native document
 
-            {
-                "FILENAME", ExactlyOneString
-            }, //Name of the original native file as it existed at the time of collection
+                { "DOCID", AnyString }, //Extension of native document
+                {
+                    "DOCLINK", AnyString
+                }, //Full relative path to the current location of the native or near-native document used to link metadata to native or near native file
 
-            {
-                "FOLDER", ExactlyOneString
-            }, //File path/folder structure for the original native file as it existed at the time of collection
+                {
+                    "FILENAME", AnyString
+                }, //Name of the original native file as it existed at the time of collection
 
-            { "FROM", UpToOneString }, //Name of person sending an email
+                {
+                    "FOLDER", AnyString
+                }, //File path/folder structure for the original native file as it existed at the time of collection
 
-            {
-                "HASH", UpToOneString
-            }, //Identifying value of an electronic record – used for deduplication and authentication; hash value is typically MD5 or SHA1
+                { "FROM", AnyString }, //Name of person sending an email
 
-            { "PARENTID", UpToOneString }, //DocId of the parent document
+                {
+                    "HASH", AnyString
+                }, //Identifying value of an electronic record – used for deduplication and authentication; hash value is typically MD5 or SHA1
 
-            {
-                "RCRDTYPE", ExactlyOneString
-            }, //Indicates document type, i.e., email; attachment; edoc; scanned; etc.
+                { "PARENTID", AnyString }, //DocId of the parent document
 
-            { "SUBJECT", UpToOneString }, //Subject line of an email
+                {
+                    "RCRDTYPE", AnyString
+                }, //Indicates document type, i.e., email; attachment; edoc; scanned; etc.
 
-            { "TIMERECEIVED", UpToOneUKTime }, //Time email was received in user’s mailbox
+                { "SUBJECT", AnyString }, //Subject line of an email
 
-            { "TIMESENT", UpToOneUKTime }, //Time email was sent
+                { "TIMERECEIVED", UKTime }, //Time email was received in user’s mailbox
 
-            { "TO", AnyMultiplicityString }, //Name(s) of person(s) receiving email
+                { "TIMESENT", UKTime }, //Time email was sent
 
-            { "AUTHORS", UpToOneString }, //Name of person creating document
+                { "TO", StringArray }, //Name(s) of person(s) receiving email
 
-            { "DATECREATED", UpToOneUKDate }, //Date document was created
+                { "AUTHORS", AnyString }, //Name of person creating document
 
-            { "DATESAVED", UpToOneUKDate }, //Date document was last saved
+                { "DATECREATED", UKDate }, //Date document was created
 
-            { "DOCTITLE", UpToOneString }, //Title given to native file
-        }.ToImmutableSortedDictionary()
-    };
+                { "DATESAVED", UKDate }, //Date document was last saved
+
+                { "DOCTITLE", AnyString }, //Title given to native file
+            }
+        );
 }
 
 }

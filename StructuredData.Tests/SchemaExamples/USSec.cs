@@ -4,6 +4,7 @@ using System.Threading;
 using System.Threading.Tasks;
 using AutoTheory;
 using Divergic.Logging.Xunit;
+using Json.Schema;
 using Reductech.EDR.Core;
 using Reductech.EDR.Core.Abstractions;
 using Reductech.EDR.Core.Entities;
@@ -15,6 +16,8 @@ using Reductech.EDR.Core.TestHarness;
 using Reductech.EDR.Core.Util;
 using Xunit;
 using static Reductech.EDR.Core.TestHarness.StaticHelpers;
+using static Reductech.EDR.Core.TestHarness.SchemaHelpers;
+using static Reductech.EDR.Connectors.StructuredData.Tests.SchemaExamples.SchemaHelpers;
 
 namespace Reductech.EDR.Connectors.StructuredData.Tests.SchemaExamples
 {
@@ -22,46 +25,6 @@ namespace Reductech.EDR.Connectors.StructuredData.Tests.SchemaExamples
 [UseTestOutputHelper]
 public partial class UssecSchemaExamples
 {
-    public static SchemaProperty ExactlyOneString =
-        new() { Multiplicity = Multiplicity.ExactlyOne, Type = SCLType.String };
-
-    public static SchemaProperty UpToOneString =
-        new() { Multiplicity = Multiplicity.UpToOne, Type = SCLType.String };
-
-    public static SchemaProperty AnyMultiplicityString =
-        new() { Multiplicity = Multiplicity.Any, Type = SCLType.String };
-
-    public static SchemaProperty AtLeastOneString =
-        new() { Multiplicity = Multiplicity.Any, Type = SCLType.String };
-
-    public static SchemaProperty UpToOneUSDate = new()
-    {
-        Multiplicity     = Multiplicity.UpToOne,
-        Type             = SCLType.Date,
-        DateOutputFormat = "MM/dd/yyyy"
-    };
-
-    public static SchemaProperty UpToOneUSTime = new()
-    {
-        Multiplicity     = Multiplicity.UpToOne,
-        Type             = SCLType.Date,
-        DateOutputFormat = "hh:mm tt zzz"
-    };
-
-    public static SchemaProperty UpToOneUKDate = new()
-    {
-        Multiplicity     = Multiplicity.UpToOne,
-        Type             = SCLType.Date,
-        DateOutputFormat = "yyyy/MM/dd"
-    };
-
-    public static SchemaProperty UpToOneUKTime = new()
-    {
-        Multiplicity     = Multiplicity.UpToOne,
-        Type             = SCLType.Date,
-        DateOutputFormat = "HH:mm:ss zzz"
-    };
-
     [Fact]
     public void USSecSchemaShouldMatchText()
     {
@@ -71,7 +34,7 @@ public partial class UssecSchemaExamples
     }
 
     [Fact]
-    public async Task EnforceSchemaShouldWork()
+    public async Task ValidateShouldWork()
     {
         var ussecMap = Entity.Create(
             ("BEGINBATES", "FIRSTBATES"),
@@ -115,7 +78,7 @@ public partial class UssecSchemaExamples
                 null,
                 new Log<Entity> { Value = new GetAutomaticVariable<Entity>() }
             ),
-            Array = new EnforceSchema
+            Array = new Validate()
             {
                 Schema = Constant(USSecSchema.ConvertToEntity()),
                 EntityStream = new EntityMapProperties
@@ -222,11 +185,16 @@ public partial class UssecSchemaExamples
 
         TestOutputHelper.WriteLine(serializedStep);
 
+        var stepFactoryStore = StepFactoryStore.TryCreateFromAssemblies(
+                ExternalContext.Default,
+                typeof(FromConcordance).Assembly
+            )
+            .GetOrThrow();
+
         var sm = new StateMonad(
             new TestOutputLogger("Logger", TestOutputHelper),
-            StepFactoryStore.CreateFromAssemblies(typeof(FromConcordance).Assembly),
+            stepFactoryStore,
             ExternalContext.Default,
-            DefaultRestClientFactory.Instance,
             new Dictionary<string, object>()
         );
 
@@ -235,73 +203,73 @@ public partial class UssecSchemaExamples
         result.ShouldBeSuccessful();
     }
 
-    public static readonly Schema USSecSchema = new()
-    {
-        Name = "United States Securities and Exchange Commission Data Delivery Standards",
-        DefaultErrorBehavior = ErrorBehavior.Error,
-        ExtraProperties = ExtraPropertyBehavior.Remove,
-        Properties = new Dictionary<string, SchemaProperty>
-        {
-            { "FIRSTBATES", ExactlyOneString }, //First Bates number of native file document/email
-            { "LASTBATES", ExactlyOneString },  //Last Bates number of native file document/email
+    public static readonly JsonSchema USSecSchema = new JsonSchemaBuilder()
+        .Title("United States Securities and Exchange Commission Data Delivery Standards")
+        .AdditionalProperties(JsonSchema.False)
+        .Required(
+            "FIRSTBATES",
+            "LASTBATES",
+            "ATTACHRANGE",
+            "BEGATTACH",
+            "ENDATTACH",
+            "CUSTODIAN",
+            "SUBJECT",
+            "MIME_TYPE",
+            "FILE_EXTEN",
+            "FILE_SIZE",
+            "PGCOUNT",
+            "OCRPATH"
+        )
+        .Properties(
+            new Dictionary<string, JsonSchema>()
             {
-                "ATTACHRANGE", ExactlyOneString
-            }, //Bates number of the first page of the parent document to the Bates number of the last page of the last attachment “child” document
-            { "BEGATTACH", ExactlyOneString }, //First Bates number of attachment range
-            { "ENDATTACH", ExactlyOneString }, //Last Bates number of attachment range
-            { "PARENT_BATES", UpToOneString },
-            { "CHILD_BATES", AnyMultiplicityString },
-            { "CUSTODIAN", ExactlyOneString },
-            { "FROM", AtLeastOneString },
-            { "TO", AnyMultiplicityString },
-            { "CC", AnyMultiplicityString },
-            { "BCC", AnyMultiplicityString },
-            { "SUBJECT", ExactlyOneString },
-            { "FILE_NAME", UpToOneString },
-            { "DATE_SENT", UpToOneUSDate },
-            { "TIME_SENT/TIME_ZONE", UpToOneUSTime },
-            { "TIME_ZONE", UpToOneString },
-            { "LINK", UpToOneString },
-            { "MIME_TYPE", ExactlyOneString },
-            { "FILE_EXTEN", ExactlyOneString },
-            { "AUTHOR", UpToOneString },
-            { "LAST_AUTHOR", UpToOneString },
-            { "DATE_CREATED", UpToOneUSDate },
-            { "TIME_CREATED/TIME_ZONE", UpToOneUSTime },
-            { "DATE_MOD", UpToOneUSDate },
-            { "TIME_MOD/TIME_ZONE", UpToOneUSTime },
-            { "DATE_ACCESSD", UpToOneUSDate },
-            { "TIME_ACCESSD/TIME_ZONE", UpToOneUSTime },
-            { "PRINTED_DATE", UpToOneUSDate },
-            {
-                "FILE_SIZE",
-                new SchemaProperty
+                { "FIRSTBATES", AnyString }, //First Bates number of native file document/email
+                { "LASTBATES", AnyString },  //Last Bates number of native file document/email
                 {
-                    Multiplicity = Multiplicity.ExactlyOne, Type = SCLType.Integer
-                }
-            },
-            {
-                "PGCOUNT",
-                new SchemaProperty
+                    "ATTACHRANGE", AnyString
+                }, //Bates number of the first page of the parent document to the Bates number of the last page of the last attachment “child” document
+                { "BEGATTACH", AnyString }, //First Bates number of attachment range
+                { "ENDATTACH", AnyString }, //Last Bates number of attachment range
+                { "PARENT_BATES", AnyString },
+                { "CHILD_BATES", StringArray },
+                { "CUSTODIAN", AnyString },
+                { "FROM", StringArray },
+                { "TO", StringArray },
+                { "CC", StringArray },
+                { "BCC", StringArray },
+                { "SUBJECT", AnyString },
+                { "FILE_NAME", AnyString },
+                { "DATE_SENT", USDate },
+                { "TIME_SENT/TIME_ZONE", USTime },
+                { "TIME_ZONE", AnyString },
+                { "LINK", AnyString },
+                { "MIME_TYPE", AnyString },
+                { "FILE_EXTEN", AnyString },
+                { "AUTHOR", AnyString },
+                { "LAST_AUTHOR", AnyString },
+                { "DATE_CREATED", USDate },
+                { "TIME_CREATED/TIME_ZONE", USTime },
+                { "DATE_MOD", USDate },
+                { "TIME_MOD/TIME_ZONE", USTime },
+                { "DATE_ACCESSD", USDate },
+                { "TIME_ACCESSD/TIME_ZONE", USTime },
+                { "PRINTED_DATE", USDate },
+                { "FILE_SIZE", AnyInt },
+                { "PGCOUNT", AnyInt },
+                { "PATH", AnyString },
+                { "INTFILEPATH", AnyString },
+                { "INTMSGID", AnyString },
+                { "HEADER", AnyString },
                 {
-                    Multiplicity = Multiplicity.ExactlyOne, Type = SCLType.Integer
-                }
-            },
-            { "PATH", UpToOneString },
-            { "INTFILEPATH", UpToOneString },
-            { "INTMSGID", UpToOneString },
-            { "HEADER", UpToOneString },
-            {
-                "MD5HASH", UpToOneString with
-                {
-                    Regex =
-                    //lang=regex
-                    "[0-9a-f]+"
-                }
-            },
-            { "OCRPATH", ExactlyOneString },
-        }.ToImmutableSortedDictionary()
-    };
+                    "MD5HASH", new JsonSchemaBuilder()
+                        .Type(SchemaValueType.String)
+                        .Pattern( //lang=regex
+                            "[0-9a-f]+"
+                        )
+                },
+                { "OCRPATH", AnyString },
+            }
+        );
 }
 
 }

@@ -55,7 +55,7 @@ public partial class ToIDXTests : StepTestBase<ToIDX, StringStream>
             yield return new ErrorCase(
                 "Single Property",
                 new ToIDX() { Entity = Constant(foo1) },
-                ErrorCode.SchemaViolationMissingProperty.ToErrorBuilder("DREREFERENCE", foo1)
+                ErrorCode.SchemaViolation.ToErrorBuilder("DREREFERENCE", foo1)
             );
         }
     }
