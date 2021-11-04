@@ -72,7 +72,7 @@ public static class IDXSerializer
                     return v;
             }
             else if (dreField.Mandatory)
-                return ErrorCode.SchemaViolationMissingProperty.ToErrorBuilder(
+                return ErrorCode.SchemaViolation.ToErrorBuilder(
                     dreField.Name,
                     entity
                 );
@@ -92,7 +92,7 @@ public static class IDXSerializer
 
                 var v = TryAppendValue(
                     stringBuilder,
-                    entityProperty.BestValue,
+                    entityProperty.Value,
                     fieldValue
                 );
 
@@ -165,7 +165,7 @@ public static class IDXSerializer
             return Unit.Default;
         }
 
-        if (entityValue is EntityValue.Date date)
+        if (entityValue is EntityValue.DateTime date)
         {
             AppendField(date.Value.ToString("yyyy/MM/dd"));
             return Unit.Default;

@@ -8,7 +8,6 @@ using Reductech.EDR.Core.Attributes;
 using Reductech.EDR.Core.Enums;
 using Reductech.EDR.Core.Internal;
 using Reductech.EDR.Core.Internal.Errors;
-using Reductech.EDR.Core.Util;
 using Entity = Reductech.EDR.Core.Entity;
 
 namespace Reductech.EDR.Connectors.StructuredData
@@ -35,7 +34,6 @@ public sealed class ToConcordance : CompoundStep<StringStream>
             AlwaysQuote,
             MultiValueDelimiter,
             DateTimeFormat,
-            new ErrorLocation(this),
             cancellationToken
         );
 

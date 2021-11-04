@@ -1,4 +1,5 @@
 ﻿using System.Collections.Generic;
+using System.Dynamic;
 using System.Globalization;
 using System.IO;
 using System.Linq;
@@ -11,6 +12,7 @@ using Reductech.EDR.Core;
 using Reductech.EDR.Core.Enums;
 using Reductech.EDR.Core.Internal;
 using Reductech.EDR.Core.Internal.Errors;
+using Reductech.EDR.Core.Util;
 using Entity = Reductech.EDR.Core.Entity;
 
 namespace Reductech.EDR.Connectors.StructuredData.Util
@@ -35,94 +37,32 @@ public static class CSVReader
         ErrorLocation errorLocation,
         CancellationToken cancellationToken)
     {
-        var testStreamResult = await stream.Run(stateMonad, cancellationToken);
-
-        if (testStreamResult.IsFailure)
-            return testStreamResult.ConvertFailure<Array<Entity>>();
-
-        var delimiterResult = await delimiter.Run(stateMonad, cancellationToken)
-            .Map(async x => await x.GetStringAsync());
-
-        if (delimiterResult.IsFailure)
-            return delimiterResult.ConvertFailure<Array<Entity>>();
-
-        var quoteResult = await TryConvertToChar(
-            quoteCharacter,
-            "Quote Character",
-            stateMonad,
-            errorLocation,
+        var stuff = await stateMonad.RunStepsAsync(
+            stream,
+            delimiter.WrapStringStream(),
+            commentCharacter.WrapChar(nameof(commentCharacter)),
+            quoteCharacter.WrapChar(nameof(quoteCharacter)),
+            multiValueDelimiter.WrapChar(nameof(multiValueDelimiter)),
             cancellationToken
         );
 
-        if (quoteResult.IsFailure)
-            return quoteResult.ConvertFailure<Array<Entity>>();
+        if (stuff.IsFailure)
+            return stuff.ConvertFailure<Array<Entity>>();
 
-        var commentResult = await TryConvertToChar(
-            commentCharacter,
-            "Comment Character",
-            stateMonad,
-            errorLocation,
-            cancellationToken
-        );
-
-        if (commentResult.IsFailure)
-            return commentResult.ConvertFailure<Array<Entity>>();
-
-        var multiValueResult = await TryConvertToChar(
-            multiValueDelimiter,
-            "MultiValue Delimiter",
-            stateMonad,
-            errorLocation,
-            cancellationToken
-        );
-
-        if (multiValueResult.IsFailure)
-            return multiValueResult.ConvertFailure<Array<Entity>>();
+        var (streamResult, delimiterResult, commentResult, quoteResult, multiValueResult) =
+            stuff.Value;
 
         var asyncEnumerable = ReadCSV(
-                testStreamResult.Value,
-                delimiterResult.Value,
-                quoteResult.Value,
-                commentResult.Value,
-                multiValueResult.Value,
+                streamResult,
+                delimiterResult,
+                quoteResult,
+                commentResult,
+                multiValueResult,
                 errorLocation
             )
             .ToSCLArray();
 
         return asyncEnumerable;
-    }
-
-    /// <summary>
-    /// Tries to convert a string step to a single nullable character.
-    /// </summary>
-    public static async Task<Result<char?, IError>> TryConvertToChar(
-        IStep<StringStream> step,
-        string propertyName,
-        IStateMonad stateMonad,
-        ErrorLocation errorLocation,
-        CancellationToken cancellationToken)
-    {
-        var charResult = await step.Run(stateMonad, cancellationToken)
-            .Map(async x => await x.GetStringAsync());
-
-        if (charResult.IsFailure)
-            return charResult.ConvertFailure<char?>();
-
-        char? resultChar;
-
-        if (charResult.Value.Length == 0)
-            resultChar = null;
-        else if (charResult.Value.Length == 1)
-            resultChar = charResult.Value.Single();
-        else
-            return new SingleError(
-                errorLocation,
-                ErrorCode.SingleCharacterExpected,
-                propertyName,
-                charResult.Value
-            );
-
-        return resultChar;
     }
 
     /// <summary>
@@ -173,15 +113,31 @@ public static class CSVReader
 
         await foreach (var row in reader.GetRecordsAsync<dynamic>())
         {
-            var dict = row as IDictionary<string, object>;
+            ExpandoObject eo = row;
 
-            var values = dict!.Select(x => (new EntityPropertyKey(x.Key), x.Value));
+            IEnumerable<(EntityPropertyKey, object?)> values =
+                eo.Select(x => (new EntityPropertyKey(x.Key), GetValue(x.Value)));
 
-            var entity = Entity.Create(values!, multiValueDelimiter);
+            var entity = Entity.Create(values);
             yield return entity;
         }
 
         reader.Dispose();
+
+        object? GetValue(object? dictValue)
+        {
+            if (!multiValueDelimiter.HasValue)
+                return dictValue;
+
+            var s = dictValue?.ToString();
+
+            var arr = s?.Split(multiValueDelimiter.Value);
+
+            if (arr?.Length == 1)
+                return dictValue;
+
+            return arr;
+        }
 
         bool HandleException(ReadingExceptionOccurredArgs args)
         {

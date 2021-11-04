@@ -15,6 +15,7 @@ using Reductech.EDR.Core;
 using Reductech.EDR.Core.Enums;
 using Reductech.EDR.Core.Internal;
 using Reductech.EDR.Core.Internal.Errors;
+using Reductech.EDR.Core.Util;
 using Entity = Reductech.EDR.Core.Entity;
 
 namespace Reductech.EDR.Connectors.StructuredData.Util
@@ -37,76 +38,36 @@ public static class CSVWriter
         IStep<bool> alwaysQuote,
         IStep<StringStream> multiValueDelimiter,
         IStep<StringStream> dateTimeFormat,
-        ErrorLocation errorLocation,
         CancellationToken cancellationToken)
     {
-        var entityStreamResult = await entityStream.Run(stateMonad, cancellationToken);
-
-        if (entityStreamResult.IsFailure)
-            return entityStreamResult.ConvertFailure<StringStream>();
-
-        var delimiterResult = await delimiter.Run(stateMonad, cancellationToken)
-            .Map(async x => await x.GetStringAsync());
-
-        if (delimiterResult.IsFailure)
-            return delimiterResult.ConvertFailure<StringStream>();
-
-        var encodingResult = await encoding.Run(stateMonad, cancellationToken);
-
-        if (encodingResult.IsFailure)
-            return encodingResult.ConvertFailure<StringStream>();
-
-        var quoteResult = await CSVReader.TryConvertToChar(
-            quoteCharacter,
-            "Quote Character",
-            stateMonad,
-            errorLocation,
+        var stuff = await stateMonad.RunStepsAsync(
+            entityStream,
+            delimiter.WrapStringStream(),
+            encoding,
+            quoteCharacter.WrapChar(nameof(quoteCharacter)),
+            alwaysQuote,
+            multiValueDelimiter.WrapChar(nameof(multiValueDelimiter)),
+            dateTimeFormat.WrapStringStream(),
             cancellationToken
         );
 
-        if (quoteResult.IsFailure)
-            return quoteResult.ConvertFailure<StringStream>();
+        if (stuff.IsFailure)
+            return stuff.ConvertFailure<StringStream>();
 
-        var multiValueResult = await CSVReader.TryConvertToChar(
-            multiValueDelimiter,
-            "MultiValue Delimiter",
-            stateMonad,
-            errorLocation,
-            cancellationToken
-        );
-
-        if (multiValueResult.IsFailure)
-            return multiValueResult.ConvertFailure<StringStream>();
-
-        if (multiValueResult.Value is null)
-            return new SingleError(
-                errorLocation,
-                ErrorCode.MissingParameter,
-                nameof(FromCSV.MultiValueDelimiter)
-            );
-
-        var alwaysQuoteResult = await alwaysQuote.Run(stateMonad, cancellationToken);
-
-        if (alwaysQuoteResult.IsFailure)
-            return alwaysQuoteResult.ConvertFailure<StringStream>();
-
-        var dateTimeResult = await dateTimeFormat.Run(stateMonad, cancellationToken)
-            .Map(async x => await x.GetStringAsync());
-
-        if (dateTimeResult.IsFailure)
-            return dateTimeResult.ConvertFailure<StringStream>();
+        var (entityStreamResult, delimiterResult, encodingResult, quoteResult, alwaysQuoteResult,
+            multiValueDelimiterResult, dateTimeResult) = stuff.Value;
 
         var result = await WriteCSV(
-                entityStreamResult.Value,
-                encodingResult.Value.Convert(),
-                delimiterResult.Value,
-                quoteResult.Value,
-                multiValueResult.Value.Value,
-                alwaysQuoteResult.Value,
-                dateTimeResult.Value,
+                entityStreamResult,
+                encodingResult.Convert(),
+                delimiterResult,
+                quoteResult,
+                alwaysQuoteResult,
+                multiValueDelimiterResult,
+                dateTimeResult,
                 cancellationToken
             )
-            .Map(x => new StringStream(x, encodingResult.Value));
+            .Map(x => new StringStream(x, encodingResult));
 
         return result;
     }
@@ -119,8 +80,8 @@ public static class CSVWriter
         Encoding encoding,
         string delimiter,
         char? quoteCharacter,
-        char multiValueDelimiter,
         bool alwaysQuote,
+        char? multiValueDelimiter,
         string dateTimeFormat,
         CancellationToken cancellationToken)
     {
@@ -159,7 +120,9 @@ public static class CSVWriter
         writer.Context.TypeConverterOptionsCache.AddOptions<DateTime?>(options);
 
         var records =
-            results.Value.Select(x => ConvertToObject(x, multiValueDelimiter, dateTimeFormat));
+            results.Value.Select(
+                x => ConvertToObject(x, multiValueDelimiter ?? '|', dateTimeFormat)
+            );
 
         await writer.WriteRecordsAsync(records, cancellationToken); //TODO pass an async enumerable
 
@@ -175,7 +138,7 @@ public static class CSVWriter
 
             foreach (var entityProperty in entity)
             {
-                var s = entityProperty.BestValue.GetFormattedString(delimiter, dateTimeFormat);
+                var s = entityProperty.Value.GetFormattedString(delimiter, dateTimeFormat);
 
                 expandoObject[entityProperty.Name] = s;
             }

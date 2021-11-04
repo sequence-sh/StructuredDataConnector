@@ -77,13 +77,12 @@ public record IdxParser(IdxParserConfiguration Config)
 
             if (propertyList.TryGetValue(fieldName, out var ep))
             {
-                var combinedValue = Combine(ep.BestValue, newValue);
+                var combinedValue = Combine(ep.Value, newValue);
 
                 propertyList[fieldName] =
                     new EntityProperty(
                         fieldName,
                         combinedValue,
-                        null,
                         currentOrder
                     );
             }
@@ -94,7 +93,6 @@ public record IdxParser(IdxParserConfiguration Config)
                     new EntityProperty(
                         fieldName,
                         newValue,
-                        null,
                         currentOrder
                     )
                 );
@@ -172,7 +170,7 @@ public record IdxParser(IdxParserConfiguration Config)
         }
 
         var newPropertyValues = propertyList.Values.OrderBy(x => x.Order)
-            .Select((x, i) => new EntityProperty(x.Name, x.BaseValue, null, i));
+            .Select((x, i) => new EntityProperty(x.Name, x.Value, i));
 
         var entity = new Entity(newPropertyValues);
         return entity;
