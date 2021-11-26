@@ -1,13 +1,6 @@
 # v0.12.0 (2021-11-26)
 
-## Summary of Changes
-
-### Steps
-
-- Removed `FromSinger` - It has been moved to the Singer Connector
-
-
-- Added `FromSinger`
+`FromSinger` step has now been moved to the Singer Connector.
 
 ## Issues Closed in this Release
 
