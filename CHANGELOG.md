@@ -19,7 +19,6 @@
 ### Maintenance
 
 - Update Core to latest version #15
-- Update Core to latest version #15
 
 # v0.11.0 (2021-09-03)
 
