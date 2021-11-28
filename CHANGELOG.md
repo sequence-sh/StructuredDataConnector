@@ -1,3 +1,18 @@
+# v0.12.0 (2021-11-26)
+
+`FromSinger` step has now been moved to the Singer Connector.
+
+## Issues Closed in this Release
+
+### New Features
+
+- Remove FromSinger #14
+- Create a Step to read Singer Data allowing EDR to act as a Singer Target #13
+
+### Maintenance
+
+- Update Core to latest version #15
+
 # v0.11.0 (2021-09-03)
 
 Maintenace release - dependency updates and testing improvements.
@@ -43,3 +58,4 @@ First release. Versions numbers are aligned with Core.
 - Enable publish to connector registry #3
 - Update Core dependecies #2
 - Move in steps and tests from Core #1
+
