@@ -1,5 +1,4 @@
 ﻿using System.Collections.Generic;
-using System.Collections.Immutable;
 using System.Threading;
 using System.Threading.Tasks;
 using AutoTheory;
@@ -83,7 +82,7 @@ public partial class UssecSchemaExamples
                 Schema = Constant(USSecSchema.ConvertToEntity()),
                 EntityStream = new EntityMapProperties
                 {
-                    EntityStream = new ArrayMap<Entity>
+                    EntityStream = new ArrayMap<Entity, Entity>
                     {
                         Array = new FromConcordance { Stream = Constant(data) },
                         Function = new LambdaFunction<Entity, Entity>(
@@ -119,23 +118,52 @@ public partial class UssecSchemaExamples
                                                                 {
                                                                     new StringToDouble
                                                                     {
-                                                                        Double = new StringReplace()
-                                                                        {
-                                                                            String = new StringReplace
-                                                                            {
-                                                                                String = new EntityGetValue<StringStream>
+                                                                        Double =
+                                                                            new
+                                                                                StringReplace()
                                                                                 {
-                                                                                    Entity = GetEntityVariable,
-                                                                                    Property = Constant("File Size"),
-                                                                                },
-                                                                                Pattern = Constant("\\s*kb\\s*"),
-                                                                                IgnoreCase = Constant(true),
-                                                                                Replace = Constant("")
-                                                                            },
-                                                                            Pattern = Constant("null"),
-                                                                            IgnoreCase = Constant(true),
-                                                                            Replace = Constant("0")
-                                                                        }
+                                                                                    String =
+                                                                                        new
+                                                                                            StringReplace
+                                                                                            {
+                                                                                                String =
+                                                                                                    new
+                                                                                                        EntityGetValue
+                                                                                                        <StringStream>
+                                                                                                        {
+                                                                                                            Entity =
+                                                                                                                GetEntityVariable,
+                                                                                                            Property =
+                                                                                                                Constant(
+                                                                                                                    "File Size"
+                                                                                                                ),
+                                                                                                        },
+                                                                                                Pattern =
+                                                                                                    Constant(
+                                                                                                        "\\s*kb\\s*"
+                                                                                                    ),
+                                                                                                IgnoreCase =
+                                                                                                    Constant(
+                                                                                                        true
+                                                                                                    ),
+                                                                                                Replace =
+                                                                                                    Constant(
+                                                                                                        ""
+                                                                                                    )
+                                                                                            },
+                                                                                    Pattern =
+                                                                                        Constant(
+                                                                                            "null"
+                                                                                        ),
+                                                                                    IgnoreCase =
+                                                                                        Constant(
+                                                                                            true
+                                                                                        ),
+                                                                                    Replace =
+                                                                                        Constant(
+                                                                                            "0"
+                                                                                        )
+                                                                                }
                                                                     },
                                                                     Constant(1000d)
                                                                 }
