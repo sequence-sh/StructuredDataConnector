@@ -1,14 +1,10 @@
-﻿using System.Collections.Generic;
-using System.Linq;
+﻿using System.Linq;
 using System.Text;
-using CSharpFunctionalExtensions;
 using Reductech.EDR.Core.Entities;
 using Reductech.EDR.Core.Internal.Errors;
-using Reductech.EDR.Core.Util;
 using Entity = Reductech.EDR.Core.Entity;
 
-namespace Reductech.EDR.Connectors.StructuredData.Util.IDX
-{
+namespace Reductech.EDR.Connectors.StructuredData.Util.IDX;
 
 /// <summary>
 /// Contains methods for serializing entities to IDX
@@ -223,6 +219,4 @@ public static class IDXSerializer
 
     private static readonly IReadOnlyCollection<string> DREFieldsSet =
         OrderedDREFields.Select(x => x.Name).ToHashSet();
-}
-
 }

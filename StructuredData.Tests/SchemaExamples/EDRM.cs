@@ -1,5 +1,4 @@
-﻿using System.Collections.Generic;
-using AutoTheory;
+﻿using AutoTheory;
 using Json.Schema;
 using Reductech.EDR.Core.Entities;
 using Reductech.EDR.Core.Internal.Serialization;
@@ -7,8 +6,7 @@ using Xunit;
 using static Reductech.EDR.Core.TestHarness.SchemaHelpers;
 using static Reductech.EDR.Connectors.StructuredData.Tests.SchemaExamples.SchemaHelpers;
 
-namespace Reductech.EDR.Connectors.StructuredData.Tests.SchemaExamples
-{
+namespace Reductech.EDR.Connectors.StructuredData.Tests.SchemaExamples;
 
 [UseTestOutputHelper]
 public partial class EDRMSchemaExamples
@@ -102,6 +100,4 @@ public partial class EDRMSchemaExamples
                 { "DOCTITLE", AnyString }, //Title given to native file
             }
         );
-}
-
 }

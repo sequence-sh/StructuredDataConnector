@@ -1,16 +1,8 @@
-﻿using System.ComponentModel.DataAnnotations;
-using System.Threading;
-using System.Threading.Tasks;
-using CSharpFunctionalExtensions;
-using Reductech.EDR.Connectors.StructuredData.Util;
-using Reductech.EDR.Core;
-using Reductech.EDR.Core.Attributes;
-using Reductech.EDR.Core.Internal;
+﻿using Reductech.EDR.Connectors.StructuredData.Util;
 using Reductech.EDR.Core.Internal.Errors;
 using Entity = Reductech.EDR.Core.Entity;
 
-namespace Reductech.EDR.Connectors.StructuredData
-{
+namespace Reductech.EDR.Connectors.StructuredData;
 
 /// <summary>
 /// Extracts entities from a Concordance stream.
@@ -81,6 +73,4 @@ public sealed class FromConcordance : CompoundStep<Array<Entity>>
     /// <inheritdoc />
     public override IStepFactory StepFactory { get; } =
         new SimpleStepFactory<FromConcordance, Array<Entity>>();
-}
-
 }

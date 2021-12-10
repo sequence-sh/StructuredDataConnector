@@ -1,17 +1,9 @@
-﻿using System.ComponentModel.DataAnnotations;
-using System.Threading;
-using System.Threading.Tasks;
-using CSharpFunctionalExtensions;
-using Reductech.EDR.Connectors.StructuredData.Util;
-using Reductech.EDR.Core;
-using Reductech.EDR.Core.Attributes;
+﻿using Reductech.EDR.Connectors.StructuredData.Util;
 using Reductech.EDR.Core.Enums;
-using Reductech.EDR.Core.Internal;
 using Reductech.EDR.Core.Internal.Errors;
 using Entity = Reductech.EDR.Core.Entity;
 
-namespace Reductech.EDR.Connectors.StructuredData
-{
+namespace Reductech.EDR.Connectors.StructuredData;
 
 /// <summary>
 /// Write entities to a stream in concordance format.
@@ -108,6 +100,4 @@ public sealed class ToConcordance : CompoundStep<StringStream>
     [Log(LogOutputLevel.Trace)]
     public IStep<StringStream> DateTimeFormat { get; set; } =
         new StringConstant("O");
-}
-
 }

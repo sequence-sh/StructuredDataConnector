@@ -1,22 +1,12 @@
-﻿using System;
-using System.Collections.Generic;
-using System.ComponentModel.DataAnnotations;
-using System.Text.Json;
+﻿using System.Text.Json;
 using System.Text.Json.Serialization;
-using System.Threading;
-using System.Threading.Tasks;
-using CSharpFunctionalExtensions;
 using Microsoft.Extensions.Logging;
-using Reductech.EDR.Core;
-using Reductech.EDR.Core.Attributes;
 using Reductech.EDR.Core.Entities;
-using Reductech.EDR.Core.Internal;
 using Reductech.EDR.Core.Internal.Errors;
 using Entity = Reductech.EDR.Core.Entity;
 using JsonSerializer = System.Text.Json.JsonSerializer;
 
-namespace Reductech.EDR.Connectors.StructuredData
-{
+namespace Reductech.EDR.Connectors.StructuredData;
 
 /// <summary>
 /// Extracts entities from a Json stream containing an array of entities.
@@ -75,6 +65,4 @@ public sealed class FromJsonArray : CompoundStep<Array<Entity>>
     /// <inheritdoc />
     public override IStepFactory StepFactory { get; } =
         new SimpleStepFactory<FromJsonArray, Array<Entity>>();
-}
-
 }

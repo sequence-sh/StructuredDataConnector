@@ -1,5 +1,4 @@
-﻿namespace Reductech.EDR.Connectors.StructuredData.Util.IDX
-{
+﻿namespace Reductech.EDR.Connectors.StructuredData.Util.IDX;
 
 internal enum IDXToken
 {
@@ -11,6 +10,4 @@ internal enum IDXToken
     NamedTagValue,
     EndDoc,
     EndDataReference
-}
-
 }

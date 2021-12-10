@@ -1,10 +1,4 @@
-﻿using System.Collections.Generic;
-using Reductech.EDR.Core;
-using Reductech.EDR.Core.Internal.Errors;
-using Reductech.EDR.Core.TestHarness;
-
-namespace Reductech.EDR.Connectors.StructuredData.Tests
-{
+﻿namespace Reductech.EDR.Connectors.StructuredData.Tests;
 
 public partial class FromJsonTests : StepTestBase<FromJson, Entity>
 {
@@ -60,6 +54,4 @@ public partial class FromJsonTests : StepTestBase<FromJson, Entity>
                 yield return ec;
         }
     }
-}
-
 }

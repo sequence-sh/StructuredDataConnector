@@ -1,16 +1,8 @@
-﻿using System.ComponentModel.DataAnnotations;
-using System.Threading;
-using System.Threading.Tasks;
-using CSharpFunctionalExtensions;
-using Reductech.EDR.Connectors.StructuredData.Util.IDX;
-using Reductech.EDR.Core;
-using Reductech.EDR.Core.Attributes;
-using Reductech.EDR.Core.Internal;
+﻿using Reductech.EDR.Connectors.StructuredData.Util.IDX;
 using Reductech.EDR.Core.Internal.Errors;
 using Entity = Reductech.EDR.Core.Entity;
 
-namespace Reductech.EDR.Connectors.StructuredData
-{
+namespace Reductech.EDR.Connectors.StructuredData;
 
 /// <summary>
 /// Create an entity from an IDX Stream
@@ -47,6 +39,4 @@ public sealed class FromIDX : CompoundStep<Entity>
 
     /// <inheritdoc />
     public override IStepFactory StepFactory { get; } = new SimpleStepFactory<FromIDX, Entity>();
-}
-
 }

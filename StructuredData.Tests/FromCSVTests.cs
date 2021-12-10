@@ -1,14 +1,6 @@
-﻿using System;
-using System.Collections.Generic;
-using Reductech.EDR.Core;
-using Reductech.EDR.Core.Internal;
-using Reductech.EDR.Core.Steps;
-using Reductech.EDR.Core.TestHarness;
-using Reductech.EDR.Core.Util;
-using static Reductech.EDR.Core.TestHarness.StaticHelpers;
+﻿using Reductech.EDR.Core.Steps;
 
-namespace Reductech.EDR.Connectors.StructuredData.Tests
-{
+namespace Reductech.EDR.Connectors.StructuredData.Tests;
 
 public partial class FromCSVTests : StepTestBase<FromCSV, Array<Entity>>
 {
@@ -90,6 +82,4 @@ public partial class FromCSVTests : StepTestBase<FromCSV, Array<Entity>>
             //TODO tests for errors if we can find any :)
         }
     }
-}
-
 }
