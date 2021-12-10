@@ -1,7 +1,6 @@
 ﻿using Json.Schema;
 
-namespace Reductech.EDR.Connectors.StructuredData.Tests.SchemaExamples
-{
+namespace Reductech.EDR.Connectors.StructuredData.Tests.SchemaExamples;
 
 public static class SchemaHelpers
 {
@@ -24,6 +23,4 @@ public static class SchemaHelpers
     public static JsonSchema StringArray = new JsonSchemaBuilder()
         .Type(SchemaValueType.Array)
         .Items(Core.TestHarness.SchemaHelpers.AnyString);
-}
-
 }

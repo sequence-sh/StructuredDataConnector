@@ -1,17 +1,9 @@
-﻿using System.ComponentModel.DataAnnotations;
-using System.Threading;
-using System.Threading.Tasks;
-using CSharpFunctionalExtensions;
-using Reductech.EDR.Connectors.StructuredData.Util;
-using Reductech.EDR.Core;
-using Reductech.EDR.Core.Attributes;
+﻿using Reductech.EDR.Connectors.StructuredData.Util;
 using Reductech.EDR.Core.Enums;
-using Reductech.EDR.Core.Internal;
 using Reductech.EDR.Core.Internal.Errors;
 using Entity = Reductech.EDR.Core.Entity;
 
-namespace Reductech.EDR.Connectors.StructuredData
-{
+namespace Reductech.EDR.Connectors.StructuredData;
 
 /// <summary>
 /// Write entities to a stream in CSV format.
@@ -107,6 +99,4 @@ public sealed class ToCSV : CompoundStep<StringStream>
     /// <inheritdoc />
     public override IStepFactory StepFactory { get; } =
         new SimpleStepFactory<ToCSV, StringStream>();
-}
-
 }

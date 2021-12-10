@@ -1,25 +1,18 @@
-﻿using System.Collections.Generic;
-using System.Threading;
+﻿using System.Threading;
 using System.Threading.Tasks;
 using AutoTheory;
 using Divergic.Logging.Xunit;
 using Json.Schema;
-using Reductech.EDR.Core;
 using Reductech.EDR.Core.Abstractions;
 using Reductech.EDR.Core.Entities;
 using Reductech.EDR.Core.Enums;
-using Reductech.EDR.Core.Internal;
 using Reductech.EDR.Core.Internal.Serialization;
 using Reductech.EDR.Core.Steps;
-using Reductech.EDR.Core.TestHarness;
-using Reductech.EDR.Core.Util;
 using Xunit;
-using static Reductech.EDR.Core.TestHarness.StaticHelpers;
 using static Reductech.EDR.Core.TestHarness.SchemaHelpers;
 using static Reductech.EDR.Connectors.StructuredData.Tests.SchemaExamples.SchemaHelpers;
 
-namespace Reductech.EDR.Connectors.StructuredData.Tests.SchemaExamples
-{
+namespace Reductech.EDR.Connectors.StructuredData.Tests.SchemaExamples;
 
 [UseTestOutputHelper]
 public partial class UssecSchemaExamples
@@ -274,6 +267,4 @@ public partial class UssecSchemaExamples
                 { "OCRPATH", AnyString },
             }
         );
-}
-
 }

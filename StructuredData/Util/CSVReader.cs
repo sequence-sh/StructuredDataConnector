@@ -1,22 +1,14 @@
-﻿using System.Collections.Generic;
-using System.Dynamic;
+﻿using System.Dynamic;
 using System.Globalization;
 using System.IO;
 using System.Linq;
-using System.Threading;
-using System.Threading.Tasks;
-using CSharpFunctionalExtensions;
 using CsvHelper;
 using CsvHelper.Configuration;
-using Reductech.EDR.Core;
 using Reductech.EDR.Core.Enums;
-using Reductech.EDR.Core.Internal;
 using Reductech.EDR.Core.Internal.Errors;
-using Reductech.EDR.Core.Util;
 using Entity = Reductech.EDR.Core.Entity;
 
-namespace Reductech.EDR.Connectors.StructuredData.Util
-{
+namespace Reductech.EDR.Connectors.StructuredData.Util;
 
 /// <summary>
 /// Helps read blocks
@@ -153,6 +145,4 @@ public static class CSVReader
             );
         }
     }
-}
-
 }

@@ -1,9 +1,4 @@
-﻿using System.Collections.Generic;
-using Reductech.EDR.Core;
-using Reductech.EDR.Core.TestHarness;
-
-namespace Reductech.EDR.Connectors.StructuredData.Tests
-{
+﻿namespace Reductech.EDR.Connectors.StructuredData.Tests;
 
 public partial class FromIDXTests : StepTestBase<FromIDX, Entity>
 {
@@ -46,6 +41,4 @@ public partial class FromIDXTests : StepTestBase<FromIDX, Entity>
             );
         }
     }
-}
-
 }

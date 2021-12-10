@@ -1,9 +1,4 @@
-﻿using Reductech.EDR.Core;
-using Reductech.EDR.Core.Internal;
-using Reductech.EDR.Core.Util;
-
-namespace Reductech.EDR.Connectors.StructuredData.Util
-{
+﻿namespace Reductech.EDR.Connectors.StructuredData.Util;
 
 /// <summary>
 /// Contains methods to help mapping steps
@@ -15,6 +10,4 @@ public static class StepMaps
     /// </summary>
     public static IRunnableStep<char?> WrapChar(this IStep<StringStream> step, string name) =>
         step.WrapStep(new CharMap(name, step.TextLocation!));
-}
-
 }

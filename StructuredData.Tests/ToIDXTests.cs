@@ -1,12 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using Reductech.EDR.Core;
-using Reductech.EDR.Core.Internal.Errors;
-using Reductech.EDR.Core.TestHarness;
-using static Reductech.EDR.Core.TestHarness.StaticHelpers;
-
-namespace Reductech.EDR.Connectors.StructuredData.Tests
-{
+﻿namespace Reductech.EDR.Connectors.StructuredData.Tests;
 
 public partial class ToIDXTests : StepTestBase<ToIDX, StringStream>
 {
@@ -59,6 +51,4 @@ public partial class ToIDXTests : StepTestBase<ToIDX, StringStream>
             );
         }
     }
-}
-
 }

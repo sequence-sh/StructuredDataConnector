@@ -1,15 +1,11 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Collections.Immutable;
+﻿using System.Collections.Immutable;
 using System.Linq;
 using System.Text.RegularExpressions;
-using CSharpFunctionalExtensions;
 using Reductech.EDR.Core.Entities;
 using Reductech.EDR.Core.Internal.Errors;
 using Entity = Reductech.EDR.Core.Entity;
 
-namespace Reductech.EDR.Connectors.StructuredData.Util.IDX
-{
+namespace Reductech.EDR.Connectors.StructuredData.Util.IDX;
 
 /// <summary>
 /// The Idx parser configuration
@@ -175,6 +171,4 @@ public record IdxParser(IdxParserConfiguration Config)
         var entity = new Entity(newPropertyValues);
         return entity;
     }
-}
-
 }

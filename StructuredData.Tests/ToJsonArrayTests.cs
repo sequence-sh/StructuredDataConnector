@@ -1,10 +1,4 @@
-﻿using System.Collections.Generic;
-using Reductech.EDR.Core;
-using Reductech.EDR.Core.TestHarness;
-using static Reductech.EDR.Core.TestHarness.StaticHelpers;
-
-namespace Reductech.EDR.Connectors.StructuredData.Tests
-{
+﻿namespace Reductech.EDR.Connectors.StructuredData.Tests;
 
 public partial class ToJsonArrayTests : StepTestBase<ToJsonArray, StringStream>
 {
@@ -70,6 +64,4 @@ public partial class ToJsonArrayTests : StepTestBase<ToJsonArray, StringStream>
             );
         }
     }
-}
-
 }
