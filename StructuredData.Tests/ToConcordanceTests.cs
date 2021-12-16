@@ -11,7 +11,7 @@ public partial class ToConcordanceTests : StepTestBase<ToConcordance, StringStre
         {
             yield return new StepCase(
                 "Write Simple Concordance",
-                new Log<StringStream>
+                new Log
                 {
                     Value = new ToConcordance()
                     {
@@ -27,7 +27,7 @@ public partial class ToConcordanceTests : StepTestBase<ToConcordance, StringStre
 
             yield return new StepCase(
                 "Write Simple Concordance MultiValue",
-                new Log<StringStream>
+                new Log
                 {
                     Value = new ToConcordance
                     {

@@ -1,5 +1,4 @@
-﻿using System.Collections.Immutable;
-using System.Linq;
+﻿using System.Linq;
 using System.Text.RegularExpressions;
 using Reductech.EDR.Core.Entities;
 using Reductech.EDR.Core.Internal.Errors;
@@ -31,24 +30,26 @@ public record IdxParser(IdxParserConfiguration Config)
         RegexOptions.Compiled | RegexOptions.IgnoreCase
     );
 
-    private static EntityValue Combine(EntityValue ev1, EntityValue ev2)
+    private static EagerArray<ISCLObject> Combine(ISCLObject ev1, ISCLObject ev2)
     {
-        if (ev1 is EntityValue.NestedList l1)
+        if (ev1 is IArray l1)
         {
-            if (ev2 is EntityValue.NestedList l2)
+            if (ev2 is IArray l2)
             {
-                return new EntityValue.NestedList(l1.Value.AddRange(l2.Value));
+                return new EagerArray<ISCLObject>(
+                    l1.ListIfEvaluated().Value.Concat(l2.ListIfEvaluated().Value).ToList()
+                );
             }
 
-            return new EntityValue.NestedList(l1.Value.Add(ev2));
+            return new EagerArray<ISCLObject>(l1.ListIfEvaluated().Value.Append(ev2).ToList());
         }
 
-        if (ev2 is EntityValue.NestedList list2)
+        if (ev2 is IArray list2)
         {
-            return new EntityValue.NestedList(list2.Value.Prepend(ev2).ToImmutableList());
+            return new EagerArray<ISCLObject>(list2.ListIfEvaluated().Value.Prepend(ev1).ToList());
         }
 
-        return new EntityValue.NestedList(new[] { ev1, ev2 }.ToImmutableList());
+        return new EagerArray<ISCLObject>(new[] { ev1, ev2 });
     }
 
     /// <summary>
@@ -66,7 +67,7 @@ public record IdxParser(IdxParserConfiguration Config)
         void AddField(string fieldName, string fieldValue)
         {
             var fieldMatch = FieldRegex.Match(fieldName);
-            var newValue   = EntityValue.CreateFromObject(fieldValue);
+            var newValue   = new StringStream(fieldValue);
 
             if (fieldMatch.Success)
                 fieldName = fieldMatch.Groups["name"].Value;

@@ -21,7 +21,7 @@ public partial class FromConcordanceTests : StepTestBase<FromConcordance, Array<
                     },
                     Action = new LambdaFunction<Entity, Unit>(
                         null,
-                        new Log<Entity> { Value = new GetAutomaticVariable<Entity>() }
+                        new Log { Value = new GetAutomaticVariable<Entity>() }
                     )
                 },
                 Unit.Default,
@@ -41,7 +41,7 @@ public partial class FromConcordanceTests : StepTestBase<FromConcordance, Array<
                     },
                     Action = new LambdaFunction<Entity, Unit>(
                         null,
-                        new Log<Entity> { Value = new GetAutomaticVariable<Entity>() }
+                        new Log { Value = new GetAutomaticVariable<Entity>() }
                     )
                 },
                 Unit.Default,
@@ -61,7 +61,7 @@ public partial class FromConcordanceTests : StepTestBase<FromConcordance, Array<
                     },
                     Action = new LambdaFunction<Entity, Unit>(
                         null,
-                        new Log<Entity> { Value = new GetAutomaticVariable<Entity>() }
+                        new Log { Value = new GetAutomaticVariable<Entity>() }
                     )
                 },
                 Unit.Default,

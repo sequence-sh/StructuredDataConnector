@@ -51,7 +51,7 @@ public sealed class ToIDX : CompoundStep<StringStream>
     /// </summary>
     [StepProperty(2)]
     [DefaultValueExplanation("Convert to a document")]
-    public IStep<bool> ConvertToDocument { get; set; } = new BoolConstant(true);
+    public IStep<SCLBool> ConvertToDocument { get; set; } = new SCLConstant<SCLBool>(SCLBool.True);
 
     /// <inheritdoc />
     public override IStepFactory StepFactory { get; } =
