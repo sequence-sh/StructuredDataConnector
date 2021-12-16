@@ -48,8 +48,8 @@ public sealed class ToConcordance : CompoundStep<StringStream>
     /// </summary>
     [StepProperty(2)]
     [DefaultValueExplanation("UTF8 no BOM")]
-    public IStep<EncodingEnum> Encoding { get; set; } =
-        new EnumConstant<EncodingEnum>(EncodingEnum.UTF8);
+    public IStep<SCLEnum<EncodingEnum>> Encoding { get; set; } =
+        new SCLConstant<SCLEnum<EncodingEnum>>(new SCLEnum<EncodingEnum>(EncodingEnum.UTF8));
 
     /// <summary>
     /// The delimiter to use to separate fields.
@@ -58,7 +58,7 @@ public sealed class ToConcordance : CompoundStep<StringStream>
     [DefaultValueExplanation("\u0014")]
     [Log(LogOutputLevel.Trace)]
     public IStep<StringStream> Delimiter { get; set; } =
-        new StringConstant("\u0014");
+        new SCLConstant<StringStream>("\u0014");
 
     /// <summary>
     /// The quote character to use.
@@ -70,14 +70,14 @@ public sealed class ToConcordance : CompoundStep<StringStream>
     [SingleCharacter]
     [Log(LogOutputLevel.Trace)]
     public IStep<StringStream> QuoteCharacter { get; set; } =
-        new StringConstant("\u00FE");
+        new SCLConstant<StringStream>("\u00FE");
 
     /// <summary>
     /// Whether to always quote all fields and headers.
     /// </summary>
     [StepProperty(5)]
     [DefaultValueExplanation("false")]
-    public IStep<bool> AlwaysQuote { get; set; } = new BoolConstant(true);
+    public IStep<SCLBool> AlwaysQuote { get; set; } = new SCLConstant<SCLBool>(SCLBool.True);
 
     /// <summary>
     /// The multi value delimiter character to use.
@@ -89,7 +89,7 @@ public sealed class ToConcordance : CompoundStep<StringStream>
     [SingleCharacter]
     [Log(LogOutputLevel.Trace)]
     public IStep<StringStream> MultiValueDelimiter { get; set; } =
-        new StringConstant("|");
+        new SCLConstant<StringStream>("|");
 
     /// <summary>
     /// The format to use for DateTime fields.
@@ -99,5 +99,5 @@ public sealed class ToConcordance : CompoundStep<StringStream>
     [Example("yyyy/MM/dd HH:mm:ss")]
     [Log(LogOutputLevel.Trace)]
     public IStep<StringStream> DateTimeFormat { get; set; } =
-        new StringConstant("O");
+        new SCLConstant<StringStream>("O");
 }

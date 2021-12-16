@@ -107,8 +107,8 @@ public static class CSVReader
         {
             ExpandoObject eo = row;
 
-            IEnumerable<(EntityPropertyKey, object?)> values =
-                eo.Select(x => (new EntityPropertyKey(x.Key), GetValue(x.Value)));
+            (string, object?)[] values =
+                eo.Select(x => (x.Key, GetValue(x.Value))).ToArray();
 
             var entity = Entity.Create(values);
             yield return entity;

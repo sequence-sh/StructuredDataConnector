@@ -68,7 +68,7 @@ public partial class UssecSchemaExamples
         {
             Action = new LambdaFunction<Entity, Unit>(
                 null,
-                new Log<Entity> { Value = new GetAutomaticVariable<Entity>() }
+                new Log { Value = new GetAutomaticVariable<Entity>() }
             ),
             Array = new Validate()
             {
@@ -80,10 +80,10 @@ public partial class UssecSchemaExamples
                         Array = new FromConcordance { Stream = Constant(data) },
                         Function = new LambdaFunction<Entity, Entity>(
                             null,
-                            new EntitySetValue<int>
+                            new EntitySetValue<SCLInt>
                             {
                                 Value =
-                                    new If<int>()
+                                    new If<SCLInt>()
                                     {
                                         Condition = new Not()
                                         {
@@ -104,10 +104,10 @@ public partial class UssecSchemaExamples
                                                 {
                                                     new DoubleProduct
                                                     {
-                                                        Terms = new ArrayNew<double>
+                                                        Terms = new ArrayNew<SCLDouble>
                                                         {
                                                             Elements =
-                                                                new List<IStep<double>>
+                                                                new List<IStep<SCLDouble>>
                                                                 {
                                                                     new StringToDouble
                                                                     {
@@ -178,7 +178,7 @@ public partial class UssecSchemaExamples
             }
         };
 
-        var serializedStep = step.Serialize();
+        var serializedStep = step.Serialize(SerializeOptions.Serialize);
 
         TestOutputHelper.WriteLine(serializedStep);
 

@@ -43,7 +43,7 @@ public sealed class FromCSV : CompoundStep<Array<Entity>>
     [StepProperty(2)]
     [DefaultValueExplanation(",")]
     [Log(LogOutputLevel.Trace)]
-    public IStep<StringStream> Delimiter { get; set; } = new StringConstant(",");
+    public IStep<StringStream> Delimiter { get; set; } = new SCLConstant<StringStream>(",");
 
     /// <summary>
     /// The token to use to indicate comments.
@@ -55,7 +55,7 @@ public sealed class FromCSV : CompoundStep<Array<Entity>>
     [SingleCharacter]
     [Log(LogOutputLevel.Trace)]
     public IStep<StringStream> CommentCharacter { get; set; } =
-        new StringConstant("#");
+        new SCLConstant<StringStream>("#");
 
     /// <summary>
     /// The quote character to use.
@@ -67,7 +67,7 @@ public sealed class FromCSV : CompoundStep<Array<Entity>>
     [SingleCharacter]
     [Log(LogOutputLevel.Trace)]
     public IStep<StringStream> QuoteCharacter { get; set; } =
-        new StringConstant("\"");
+        new SCLConstant<StringStream>("\"");
 
     /// <summary>
     /// The multi value delimiter character to use.
@@ -79,7 +79,7 @@ public sealed class FromCSV : CompoundStep<Array<Entity>>
     [SingleCharacter]
     [Log(LogOutputLevel.Trace)]
     public IStep<StringStream> MultiValueDelimiter { get; set; } =
-        new StringConstant("");
+        new SCLConstant<StringStream>("");
 
     /// <inheritdoc />
     public override IStepFactory StepFactory { get; } =

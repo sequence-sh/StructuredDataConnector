@@ -24,9 +24,9 @@ public static class CSVWriter
         IStateMonad stateMonad,
         IStep<Array<Entity>> entityStream,
         IStep<StringStream> delimiter,
-        IStep<EncodingEnum> encoding,
+        IStep<SCLEnum<EncodingEnum>> encoding,
         IStep<StringStream> quoteCharacter,
-        IStep<bool> alwaysQuote,
+        IStep<SCLBool> alwaysQuote,
         IStep<StringStream> multiValueDelimiter,
         IStep<StringStream> dateTimeFormat,
         CancellationToken cancellationToken)
@@ -50,7 +50,7 @@ public static class CSVWriter
 
         var result = await WriteCSV(
                 entityStreamResult,
-                encodingResult.Convert(),
+                encodingResult.Value.Convert(),
                 delimiterResult,
                 quoteResult,
                 alwaysQuoteResult,
@@ -129,12 +129,26 @@ public static class CSVWriter
 
             foreach (var entityProperty in entity)
             {
-                var s = entityProperty.Value.GetFormattedString(delimiter, dateTimeFormat);
+                var s = Format(entityProperty.Value, delimiter, dateTimeFormat);
 
                 expandoObject[entityProperty.Name] = s;
             }
 
             return expandoObject;
+        }
+
+        static string Format(ISCLObject obj, char delimiter, string dateTimeFormat)
+        {
+            if (obj is SCLDateTime dateTime)
+                return dateTime.Value.ToString(dateTimeFormat);
+
+            if (obj is IArray array)
+                return string.Join(
+                    delimiter,
+                    array.ListIfEvaluated().Value.Select(x => Format(x, delimiter, dateTimeFormat))
+                );
+
+            return obj.Serialize(SerializeOptions.Primitive);
         }
     }
 }

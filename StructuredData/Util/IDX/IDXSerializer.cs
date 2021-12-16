@@ -1,6 +1,5 @@
 ﻿using System.Linq;
 using System.Text;
-using Reductech.EDR.Core.Entities;
 using Reductech.EDR.Core.Internal.Errors;
 using Entity = Reductech.EDR.Core.Entity;
 
@@ -102,10 +101,10 @@ public static class IDXSerializer
 
     private static Result<Unit, IErrorBuilder> TryAppendValue(
         StringBuilder sb,
-        EntityValue entityValue,
+        ISCLObject entityValue,
         SpecialField field)
     {
-        if (entityValue is EntityValue.Null)
+        if (entityValue is SCLNull)
             return Unit.Default;
 
         void AppendString(string s1) //TODO escape value
@@ -131,56 +130,36 @@ public static class IDXSerializer
             sb.AppendLine(line);
         }
 
-        if (entityValue is EntityValue.String s)
+        if (entityValue is StringStream s)
         {
-            AppendString(s.Value);
-            return Unit.Default;
+            AppendString(s.GetString());
         }
-
-        if (entityValue is EntityValue.Integer i)
-        {
-            AppendField(i.Value.ToString());
-            return Unit.Default;
-        }
-
-        if (entityValue is EntityValue.Double d)
-        {
-            AppendField(d.Value.ToString(Constants.DoubleFormat));
-            return Unit.Default;
-        }
-
-        if (entityValue is EntityValue.Boolean b)
-        {
-            AppendField(b.Value.ToString());
-            return Unit.Default;
-        }
-
-        if (entityValue is EntityValue.EnumerationValue ev)
-        {
-            AppendField(ev.Value.ToString());
-            return Unit.Default;
-        }
-
-        if (entityValue is EntityValue.DateTime date)
+        else if (entityValue is SCLDateTime date)
         {
             AppendField(date.Value.ToString("yyyy/MM/dd"));
             return Unit.Default;
         }
 
-        if (entityValue is EntityValue.NestedEntity)
+        else if (entityValue is Entity)
             return ErrorCode.CannotConvertNestedEntity.ToErrorBuilder("IDX");
 
-        if (entityValue is EntityValue.NestedList list)
+        else if (entityValue is IArray array)
         {
             if (!field.AllowList)
                 return ErrorCode.CannotConvertNestedList.ToErrorBuilder("IDX");
 
-            for (var j = 0; j < list.Value.Count; j++)
+            var list = array.ListIfEvaluated().Value;
+
+            for (var j = 0; j < list.Count; j++)
             {
-                var member       = list.Value[j];
+                var member       = list[j];
                 var newFieldName = $"{field.Name}{j + 1}";
                 TryAppendValue(sb, member, field with { AllowList = false, Name = newFieldName });
             }
+        }
+        else
+        {
+            AppendField(entityValue.Serialize(SerializeOptions.Primitive));
         }
 
         return Unit.Default;

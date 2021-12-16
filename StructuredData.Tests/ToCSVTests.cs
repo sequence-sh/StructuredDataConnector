@@ -11,7 +11,7 @@ public partial class ToCSVTests : StepTestBase<ToCSV, StringStream>
         {
             yield return new StepCase(
                 "Write Simple CSV",
-                new Log<StringStream>
+                new Log
                 {
                     Value = new ToCSV
                     {
@@ -27,7 +27,7 @@ public partial class ToCSVTests : StepTestBase<ToCSV, StringStream>
 
             yield return new StepCase(
                 "Write Simple CSV with tab delimiter",
-                new Log<StringStream>
+                new Log
                 {
                     Value = new ToCSV
                     {

@@ -51,7 +51,7 @@ public sealed class ToJsonArray : CompoundStep<StringStream>
     /// </summary>
     [StepProperty(2)]
     [DefaultValueExplanation("true")]
-    public IStep<bool> FormatOutput { get; set; } = new BoolConstant(true);
+    public IStep<SCLBool> FormatOutput { get; set; } = new SCLConstant<SCLBool>(SCLBool.True);
 
     /// <inheritdoc />
     public override IStepFactory StepFactory { get; } =
