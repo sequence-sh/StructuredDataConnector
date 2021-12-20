@@ -1,10 +1,10 @@
 ﻿using System.Linq;
 using System.Text.RegularExpressions;
-using Reductech.EDR.Core.Entities;
-using Reductech.EDR.Core.Internal.Errors;
-using Entity = Reductech.EDR.Core.Entity;
+using Reductech.Sequence.Core.Entities;
+using Reductech.Sequence.Core.Internal.Errors;
+using Entity = Reductech.Sequence.Core.Entity;
 
-namespace Reductech.EDR.Connectors.StructuredData.Util.IDX;
+namespace Reductech.Sequence.Connectors.StructuredData.Util.IDX;
 
 /// <summary>
 /// The Idx parser configuration

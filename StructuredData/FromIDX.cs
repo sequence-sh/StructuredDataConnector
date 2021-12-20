@@ -1,8 +1,8 @@
-﻿using Reductech.EDR.Connectors.StructuredData.Util.IDX;
-using Reductech.EDR.Core.Internal.Errors;
-using Entity = Reductech.EDR.Core.Entity;
+﻿using Reductech.Sequence.Connectors.StructuredData.Util.IDX;
+using Reductech.Sequence.Core.Internal.Errors;
+using Entity = Reductech.Sequence.Core.Entity;
 
-namespace Reductech.EDR.Connectors.StructuredData;
+namespace Reductech.Sequence.Connectors.StructuredData;
 
 /// <summary>
 /// Create an entity from an IDX Stream

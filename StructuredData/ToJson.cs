@@ -1,10 +1,10 @@
 ﻿using System.Text.Json;
 using System.Text.Json.Serialization;
-using Reductech.EDR.Core.Entities;
-using Reductech.EDR.Core.Internal.Errors;
-using Entity = Reductech.EDR.Core.Entity;
+using Reductech.Sequence.Core.Entities;
+using Reductech.Sequence.Core.Internal.Errors;
+using Entity = Reductech.Sequence.Core.Entity;
 
-namespace Reductech.EDR.Connectors.StructuredData;
+namespace Reductech.Sequence.Connectors.StructuredData;
 
 /// <summary>
 /// Writes an entity to a stream in JSON format

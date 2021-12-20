@@ -3,16 +3,16 @@ using System.Threading.Tasks;
 using AutoTheory;
 using Divergic.Logging.Xunit;
 using Json.Schema;
-using Reductech.EDR.Core.Abstractions;
-using Reductech.EDR.Core.Entities;
-using Reductech.EDR.Core.Enums;
-using Reductech.EDR.Core.Internal.Serialization;
-using Reductech.EDR.Core.Steps;
+using Reductech.Sequence.Core.Abstractions;
+using Reductech.Sequence.Core.Entities;
+using Reductech.Sequence.Core.Enums;
+using Reductech.Sequence.Core.Internal.Serialization;
+using Reductech.Sequence.Core.Steps;
 using Xunit;
-using static Reductech.EDR.Core.TestHarness.SchemaHelpers;
-using static Reductech.EDR.Connectors.StructuredData.Tests.SchemaExamples.SchemaHelpers;
+using static Reductech.Sequence.Core.TestHarness.SchemaHelpers;
+using static Reductech.Sequence.Connectors.StructuredData.Tests.SchemaExamples.SchemaHelpers;
 
-namespace Reductech.EDR.Connectors.StructuredData.Tests.SchemaExamples;
+namespace Reductech.Sequence.Connectors.StructuredData.Tests.SchemaExamples;
 
 [UseTestOutputHelper]
 public partial class UssecSchemaExamples

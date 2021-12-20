@@ -1,7 +1,7 @@
 ﻿using System.Linq;
-using Reductech.EDR.Core.Internal.Errors;
+using Reductech.Sequence.Core.Internal.Errors;
 
-namespace Reductech.EDR.Connectors.StructuredData.Util;
+namespace Reductech.Sequence.Connectors.StructuredData.Util;
 
 /// <summary>
 /// Maps string streams to characters

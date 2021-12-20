@@ -1,6 +1,6 @@
-﻿using Reductech.EDR.Core.Steps;
+﻿using Reductech.Sequence.Core.Steps;
 
-namespace Reductech.EDR.Connectors.StructuredData.Tests;
+namespace Reductech.Sequence.Connectors.StructuredData.Tests;
 
 public partial class FromConcordanceTests : StepTestBase<FromConcordance, Array<Entity>>
 {

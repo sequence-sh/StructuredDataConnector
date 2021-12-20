@@ -4,22 +4,22 @@
     <TargetFramework>net6.0</TargetFramework>
     <GeneratePackageOnBuild>false</GeneratePackageOnBuild>
     <GenerateDocumentationFile>true</GenerateDocumentationFile>
-    <RootNamespace>Reductech.EDR.Connectors.StructuredData</RootNamespace>
-    <AssemblyName>Reductech.EDR.Connectors.StructuredData</AssemblyName>
+    <RootNamespace>Reductech.Sequence.Connectors.StructuredData</RootNamespace>
+    <AssemblyName>Reductech.Sequence.Connectors.StructuredData</AssemblyName>
     <Nullable>enable</Nullable>
     <Version>0.13.0$(VersionSuffix)</Version>
   </PropertyGroup>
 
   <PropertyGroup>
-    <PackageId>Reductech.EDR.Connectors.StructuredData</PackageId>
-    <Title>EDR Structured Data Connector</Title>
-    <Description>A class library for using structured data - csv, concordance, json - in EDR Sequences</Description>
-    <Product>EDR</Product>
-    <PackageTags>ediscovery;forensics;edrm;automation;orchestration</PackageTags>
+    <PackageId>Reductech.Sequence.Connectors.StructuredData</PackageId>
+    <Title>Sequence® Structured Data Connector</Title>
+    <Description>A class library for using structured data - csv, concordance, json - in Sequence® Sequences</Description>
+    <Product>Sequence®</Product>
+    <PackageTags>ediscovery;forensics;edrm;automation;orchestration;sequence</PackageTags>
 
-    <PackageProjectUrl>https://gitlab.com/reductech/edr/connectors/structureddata</PackageProjectUrl>
-    <RepositoryUrl>https://gitlab.com/reductech/edr/connectors/structureddata</RepositoryUrl>
-    <PackageReleaseNotes>Please see https://gitlab.com/reductech/edr/connectors/structureddata/-/releases</PackageReleaseNotes>
+    <PackageProjectUrl>https://gitlab.com/reductech/sequence/connectors/structureddata</PackageProjectUrl>
+    <RepositoryUrl>https://gitlab.com/reductech/sequence/connectors/structureddata</RepositoryUrl>
+    <PackageReleaseNotes>Please see https://gitlab.com/reductech/sequence/connectors/structureddata/-/releases</PackageReleaseNotes>
     <PackageLicenseExpression>Apache-2.0</PackageLicenseExpression>
 
     <Authors>Reductech</Authors>
@@ -29,7 +29,7 @@
 
   <ItemGroup>
     <PackageReference Include="CsvHelper" Version="27.2.1" />
-    <PackageReference Include="Reductech.EDR.Core" Version="0.13.0-a.main.2112200210">
+    <PackageReference Include="Reductech.Sequence.Core" Version="0.13.0-a.main.2112201532">
       <ExcludeAssets>runtime</ExcludeAssets>
     </PackageReference>
   </ItemGroup>

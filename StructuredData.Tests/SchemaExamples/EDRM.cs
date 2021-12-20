@@ -1,12 +1,12 @@
 ﻿using AutoTheory;
 using Json.Schema;
-using Reductech.EDR.Core.Entities;
-using Reductech.EDR.Core.Internal.Serialization;
+using Reductech.Sequence.Core.Entities;
+using Reductech.Sequence.Core.Internal.Serialization;
 using Xunit;
-using static Reductech.EDR.Core.TestHarness.SchemaHelpers;
-using static Reductech.EDR.Connectors.StructuredData.Tests.SchemaExamples.SchemaHelpers;
+using static Reductech.Sequence.Core.TestHarness.SchemaHelpers;
+using static Reductech.Sequence.Connectors.StructuredData.Tests.SchemaExamples.SchemaHelpers;
 
-namespace Reductech.EDR.Connectors.StructuredData.Tests.SchemaExamples;
+namespace Reductech.Sequence.Connectors.StructuredData.Tests.SchemaExamples;
 
 [UseTestOutputHelper]
 public partial class EDRMSchemaExamples
