@@ -4,11 +4,11 @@ using System.IO;
 using System.Linq;
 using CsvHelper;
 using CsvHelper.Configuration;
-using Reductech.EDR.Core.Enums;
-using Reductech.EDR.Core.Internal.Errors;
-using Entity = Reductech.EDR.Core.Entity;
+using Reductech.Sequence.Core.Enums;
+using Reductech.Sequence.Core.Internal.Errors;
+using Entity = Reductech.Sequence.Core.Entity;
 
-namespace Reductech.EDR.Connectors.StructuredData.Util;
+namespace Reductech.Sequence.Connectors.StructuredData.Util;
 
 /// <summary>
 /// Helps read blocks

@@ -1,9 +1,9 @@
 ﻿using System.Linq;
 using System.Text;
-using Reductech.EDR.Core.Internal.Errors;
-using Entity = Reductech.EDR.Core.Entity;
+using Reductech.Sequence.Core.Internal.Errors;
+using Entity = Reductech.Sequence.Core.Entity;
 
-namespace Reductech.EDR.Connectors.StructuredData.Util.IDX;
+namespace Reductech.Sequence.Connectors.StructuredData.Util.IDX;
 
 /// <summary>
 /// Contains methods for serializing entities to IDX

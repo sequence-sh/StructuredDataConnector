@@ -1,9 +1,9 @@
-﻿using Reductech.EDR.Connectors.StructuredData.Util;
-using Reductech.EDR.Core.Enums;
-using Reductech.EDR.Core.Internal.Errors;
-using Entity = Reductech.EDR.Core.Entity;
+﻿using Reductech.Sequence.Connectors.StructuredData.Util;
+using Reductech.Sequence.Core.Enums;
+using Reductech.Sequence.Core.Internal.Errors;
+using Entity = Reductech.Sequence.Core.Entity;
 
-namespace Reductech.EDR.Connectors.StructuredData;
+namespace Reductech.Sequence.Connectors.StructuredData;
 
 /// <summary>
 /// Write entities to a stream in CSV format.

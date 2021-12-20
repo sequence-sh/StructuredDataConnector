@@ -6,11 +6,11 @@
     <IsPublishable>false</IsPublishable>
     <IsTestProject>true</IsTestProject>
     <Nullable>enable</Nullable>
-    <RootNamespace>Reductech.EDR.Connectors.StructuredData.Tests</RootNamespace>
+    <RootNamespace>Reductech.Sequence.Connectors.StructuredData.Tests</RootNamespace>
   </PropertyGroup>
 
   <PropertyGroup>
-    <RepositoryUrl>https://gitlab.com/reductech/edr/connectors/structureddata</RepositoryUrl>
+    <RepositoryUrl>https://gitlab.com/reductech/sequence/connectors/structureddata</RepositoryUrl>
     <PackageLicenseExpression>Apache-2.0</PackageLicenseExpression>
     <Authors>Reductech</Authors>
     <Company>Reductech</Company>
@@ -19,7 +19,7 @@
 
   <ItemGroup>
     <PackageReference Include="Microsoft.NET.Test.Sdk" Version="16.11.0" />
-    <PackageReference Include="Reductech.EDR.Core.TestHarness" Version="0.13.0-a.main.2112200210" />
+    <PackageReference Include="Reductech.Sequence.Core.TestHarness" Version="0.13.0-a.main.2112201532" />
     <PackageReference Include="xunit" Version="2.4.1" />
     <PackageReference Include="xunit.runner.visualstudio" Version="2.4.3">
       <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>

@@ -1,4 +1,4 @@
-﻿namespace Reductech.EDR.Connectors.StructuredData.Util;
+﻿namespace Reductech.Sequence.Connectors.StructuredData.Util;
 
 /// <summary>
 /// Contains methods to help mapping steps

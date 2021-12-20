@@ -1,6 +1,6 @@
 ﻿using Json.Schema;
 
-namespace Reductech.EDR.Connectors.StructuredData.Tests.SchemaExamples;
+namespace Reductech.Sequence.Connectors.StructuredData.Tests.SchemaExamples;
 
 public static class SchemaHelpers
 {

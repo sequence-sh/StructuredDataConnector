@@ -1,4 +1,4 @@
-﻿namespace Reductech.EDR.Connectors.StructuredData.Tests;
+﻿namespace Reductech.Sequence.Connectors.StructuredData.Tests;
 
 public partial class FromJsonTests : StepTestBase<FromJson, Entity>
 {
