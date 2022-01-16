@@ -1,3 +1,12 @@
+# v0.13.0 (2022-01-16)
+
+## Issues Closed in this Release
+
+### Maintenance
+
+- Rename EDR to Sequence #28
+- Update Core to latest version #23
+
 # v0.12.0 (2021-11-26)
 
 `FromSinger` step has now been moved to the Singer Connector.
@@ -58,4 +67,5 @@ First release. Versions numbers are aligned with Core.
 - Enable publish to connector registry #3
 - Update Core dependecies #2
 - Move in steps and tests from Core #1
+
 
