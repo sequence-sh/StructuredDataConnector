@@ -7,7 +7,7 @@
     <RootNamespace>Reductech.Sequence.Connectors.StructuredData</RootNamespace>
     <AssemblyName>Reductech.Sequence.Connectors.StructuredData</AssemblyName>
     <Nullable>enable</Nullable>
-    <Version>0.13.0$(VersionSuffix)</Version>
+    <Version>0.14.0$(VersionSuffix)</Version>
   </PropertyGroup>
 
   <PropertyGroup>
@@ -29,7 +29,7 @@
 
   <ItemGroup>
     <PackageReference Include="CsvHelper" Version="27.2.1" />
-    <PackageReference Include="Reductech.Sequence.Core" Version="0.14.0-a.main.2201251353">
+    <PackageReference Include="Reductech.Sequence.Core" Version="0.14.0-a.main.2201261921">
       <ExcludeAssets>runtime</ExcludeAssets>
     </PackageReference>
   </ItemGroup>
