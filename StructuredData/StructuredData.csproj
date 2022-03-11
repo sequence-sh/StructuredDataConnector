@@ -29,7 +29,7 @@
 
   <ItemGroup>
     <PackageReference Include="CsvHelper" Version="27.2.1" />
-    <PackageReference Include="Reductech.Sequence.Core" Version="0.14.0-a.main.2203090511">
+    <PackageReference Include="Reductech.Sequence.Core" Version="0.14.0-a.main.2203101410">
       <ExcludeAssets>runtime</ExcludeAssets>
     </PackageReference>
   </ItemGroup>
