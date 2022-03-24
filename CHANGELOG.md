@@ -1,3 +1,7 @@
+# v0.14.0 (2022-03-25)
+
+Maintenance release - dependency updates only.
+
 # v0.13.0 (2022-01-16)
 
 EDR is now Sequence. The following has changed:
@@ -78,5 +82,6 @@ First release. Versions numbers are aligned with Core.
 - Enable publish to connector registry #3
 - Update Core dependecies #2
 - Move in steps and tests from Core #1
+
 
 
