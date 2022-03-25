@@ -24,6 +24,10 @@ To read an entity from Json, add a property and then convert it back to json
 - print <json> #{"Foo":1, "Bar": 2}
 ```
 
+# Documentation
+
+Documentation available at https://sequence.sh
+
 # Releases
 
 Can be downloaded from the [Releases page](https://gitlab.com/reductech/sequence/connectors/structureddata/-/releases).
