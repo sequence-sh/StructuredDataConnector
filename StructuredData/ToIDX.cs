@@ -1,6 +1,4 @@
 ﻿using Reductech.Sequence.Connectors.StructuredData.Util.IDX;
-using Reductech.Sequence.Core.Internal.Errors;
-using Entity = Reductech.Sequence.Core.Entity;
 
 namespace Reductech.Sequence.Connectors.StructuredData;
 

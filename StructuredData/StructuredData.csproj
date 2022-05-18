@@ -38,6 +38,7 @@
     <PackageReference Include="Reductech.Sequence.Core" Version="0.15.0-a.main.2205160413">
       <ExcludeAssets>runtime</ExcludeAssets>
     </PackageReference>
+    <PackageReference Include="YamlDotNet" Version="11.2.1" />
   </ItemGroup>
 
   <ItemGroup Condition="$(PackConnector) != ''">

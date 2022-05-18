@@ -1,7 +1,5 @@
 ﻿using System.Linq;
 using System.Text;
-using Reductech.Sequence.Core.Internal.Errors;
-using Entity = Reductech.Sequence.Core.Entity;
 
 namespace Reductech.Sequence.Connectors.StructuredData.Util.IDX;
 
