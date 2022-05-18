@@ -1,9 +1,6 @@
 ﻿using System.Text.Json;
 using System.Text.Json.Serialization;
 using Microsoft.Extensions.Logging;
-using Reductech.Sequence.Core.Entities;
-using Reductech.Sequence.Core.Internal.Errors;
-using Entity = Reductech.Sequence.Core.Entity;
 
 namespace Reductech.Sequence.Connectors.StructuredData;
 
