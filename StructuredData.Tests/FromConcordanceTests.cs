@@ -13,7 +13,7 @@ public partial class FromConcordanceTests : StepTestBase<FromConcordance, Array<
                 "Read Concordance and Log all lines",
                 new ForEach<Entity>
                 {
-                    Array = new FromConcordance()
+                    Array = new FromConcordance
                     {
                         Stream = Constant(
                             $@"þFooþþBarþ{Environment.NewLine}þHelloþþWorldþ{Environment.NewLine}þHello 2þþWorld 2þ"
@@ -33,7 +33,7 @@ public partial class FromConcordanceTests : StepTestBase<FromConcordance, Array<
                 "Read Concordance containing quotes and Log all lines",
                 new ForEach<Entity>
                 {
-                    Array = new FromConcordance()
+                    Array = new FromConcordance
                     {
                         Stream = Constant(
                             $@"þFooþþBarþ{Environment.NewLine}þHelloþþ""World""þ{Environment.NewLine}þHello 2þþ""World 2""þ"

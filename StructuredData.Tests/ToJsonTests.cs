@@ -9,7 +9,7 @@ public partial class ToJsonTests : StepTestBase<ToJson, StringStream>
         {
             yield return new StepCase(
                 "Single Property",
-                new ToJson()
+                new ToJson
                 {
                     Entity = Constant(Entity.Create(("Foo", 1))), FormatOutput = Constant(false)
                 },
@@ -24,7 +24,7 @@ public partial class ToJsonTests : StepTestBase<ToJson, StringStream>
 
             yield return new StepCase(
                 "List property",
-                new ToJson()
+                new ToJson
                 {
                     Entity = Constant(
                         Entity.Create(("Foo", 1), ("Bar", new[] { "a", "b", "c" }))
@@ -36,7 +36,7 @@ public partial class ToJsonTests : StepTestBase<ToJson, StringStream>
 
             yield return new StepCase(
                 "Nested Entities",
-                new ToJson()
+                new ToJson
                 {
                     Entity = Constant(
                         Entity.Create(

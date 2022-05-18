@@ -28,6 +28,12 @@
   </PropertyGroup>
 
   <ItemGroup>
+    <Compile Remove="Singer\**" />
+    <EmbeddedResource Remove="Singer\**" />
+    <None Remove="Singer\**" />
+  </ItemGroup>
+
+  <ItemGroup>
     <PackageReference Include="CsvHelper" Version="27.2.1" />
     <PackageReference Include="Reductech.Sequence.Core" Version="0.15.0-a.main.2205160413">
       <ExcludeAssets>runtime</ExcludeAssets>
@@ -38,10 +44,6 @@
     <None Include="..\README.md" Pack="true" PackagePath="\" />
     <None Include="..\LICENSE" Pack="true" PackagePath="\" />
     <None Include="..\NOTICE" Pack="true" PackagePath="\" />
-  </ItemGroup>
-
-  <ItemGroup>
-    <Folder Include="Singer\" />
   </ItemGroup>
 
   <PropertyGroup Condition="$(PackConnector) != ''">
