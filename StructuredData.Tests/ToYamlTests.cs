@@ -1,6 +1,6 @@
 ﻿namespace Reductech.Sequence.Connectors.StructuredData.Tests;
 
-public partial class ToJsonArrayTests : StepTestBase<ToJsonArray, StringStream>
+public partial class ToYamlTests : StepTestBase<ToYaml, StringStream>
 {
     /// <inheritdoc />
     protected override IEnumerable<StepCase> StepCases
@@ -9,49 +9,36 @@ public partial class ToJsonArrayTests : StepTestBase<ToJsonArray, StringStream>
         {
             yield return new StepCase(
                 "Single Property",
-                new ToJsonArray
+                new ToYaml
                 {
-                    Entities = Array(Entity.Create(("Foo", 1))), FormatOutput = Constant(false)
+                    Entity = Constant(Entity.Create(("Foo", 1))), FormatOutput = Constant(false)
                 },
-                "[{\"Foo\":1}]"
+                "Foo: 1"
             );
 
             yield return new StepCase(
                 "Single Property Formatted",
-                new ToJsonArray
-                {
-                    Entities = Array(Entity.Create(("Foo", 1))), FormatOutput = Constant(true)
-                },
-                "[\t{\t\"Foo\":\t1\t}\t]"
-            );
-
-            yield return new StepCase(
-                "Two Entities",
-                new ToJsonArray
-                {
-                    Entities     = Array(Entity.Create(("Foo", 1)), Entity.Create(("Foo", 2))),
-                    FormatOutput = Constant(false)
-                },
-                "[{\"Foo\":1},{\"Foo\":2}]"
+                new ToYaml { Entity = Constant(Entity.Create(("Foo", 1))) },
+                "Foo: 1"
             );
 
             yield return new StepCase(
                 "List property",
-                new ToJsonArray
+                new ToYaml
                 {
-                    Entities = Array(
+                    Entity = Constant(
                         Entity.Create(("Foo", 1), ("Bar", new[] { "a", "b", "c" }))
                     ),
                     FormatOutput = Constant(false)
                 },
-                @"[{""Foo"":1,""Bar"":[""a"",""b"",""c""]}]"
+                "Foo: 1\r\nBar:\r\n- a\r\n- b\r\n- c"
             );
 
             yield return new StepCase(
                 "Nested Entities",
-                new ToJsonArray
+                new ToYaml
                 {
-                    Entities = Array(
+                    Entity = Constant(
                         Entity.Create(
                             ("Foo", 1),
                             ("Bar", new[] { "a", "b", "c" }),
@@ -60,7 +47,7 @@ public partial class ToJsonArrayTests : StepTestBase<ToJsonArray, StringStream>
                     ),
                     FormatOutput = Constant(false)
                 },
-                @"[{""Foo"":1,""Bar"":[""a"",""b"",""c""],""Baz"":{""Foo"":2,""Bar"":[""d"",""e"",""f""]}}]"
+                "Foo: 1\r\nBar:\r\n- a\r\n- b\r\n- c\r\nBaz:\r\n  Foo: 2\r\n  Bar:\r\n  - d\r\n  - e\r\n  - f"
             );
         }
     }

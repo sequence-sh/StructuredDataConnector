@@ -23,7 +23,7 @@ public partial class ToIDXTests : StepTestBase<ToIDX, StringStream>
                     Entity = Constant(
                         Entity.Create(
                             ("DREREFERENCE", "392348A0"),
-                            ("authorname", new List<string>() { "Brown", "Edgar" }),
+                            ("authorname", new List<string> { "Brown", "Edgar" }),
                             ("title", "Dr."),
                             ("DREDATE", new DateTime(1990, 01, 06)),
                             ("DRETITLE", "Jurassic Molecules"),
@@ -46,7 +46,7 @@ public partial class ToIDXTests : StepTestBase<ToIDX, StringStream>
 
             yield return new ErrorCase(
                 "Single Property",
-                new ToIDX() { Entity = Constant(foo1) },
+                new ToIDX { Entity = Constant(foo1) },
                 ErrorCode.SchemaViolation.ToErrorBuilder("DREREFERENCE", foo1)
             );
         }

@@ -13,7 +13,7 @@ public partial class ToConcordanceTests : StepTestBase<ToConcordance, StringStre
                 "Write Simple Concordance",
                 new Log
                 {
-                    Value = new ToConcordance()
+                    Value = new ToConcordance
                     {
                         Entities = Array(
                             Entity.Create(("Foo", "Hello"),   ("Bar", "World")),

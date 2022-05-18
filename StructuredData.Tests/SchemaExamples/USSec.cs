@@ -6,7 +6,6 @@ using Json.Schema;
 using Reductech.Sequence.Core.Abstractions;
 using Reductech.Sequence.Core.Entities;
 using Reductech.Sequence.Core.Enums;
-using Reductech.Sequence.Core.Internal.Serialization;
 using Reductech.Sequence.Core.Steps;
 using Xunit;
 using static Reductech.Sequence.Core.TestHarness.SchemaHelpers;
@@ -70,7 +69,7 @@ public partial class UssecSchemaExamples
                 null,
                 new Log { Value = new GetAutomaticVariable<Entity>() }
             ),
-            Array = new Validate()
+            Array = new Validate
             {
                 Schema = Constant(USSecSchema.ConvertToEntity()),
                 EntityStream = new EntityMapProperties
@@ -83,24 +82,24 @@ public partial class UssecSchemaExamples
                             new EntitySetValue<SCLInt>
                             {
                                 Value =
-                                    new If<SCLInt>()
+                                    new If<SCLInt>
                                     {
-                                        Condition = new Not()
+                                        Condition = new Not
                                         {
-                                            Boolean = new StringIsEmpty()
+                                            Boolean = new StringIsEmpty
                                             {
-                                                String = new EntityGetValue<StringStream>()
+                                                String = new EntityGetValue<StringStream>
                                                 {
                                                     Entity   = GetEntityVariable,
                                                     Property = Constant("File Size")
                                                 }
                                             }
                                         },
-                                        Then = new StringToInt()
+                                        Then = new StringToInt
                                         {
-                                            Integer = new StringInterpolate()
+                                            Integer = new StringInterpolate
                                             {
-                                                Strings = new List<IStep>()
+                                                Strings = new List<IStep>
                                                 {
                                                     new DoubleProduct
                                                     {
@@ -113,7 +112,7 @@ public partial class UssecSchemaExamples
                                                                     {
                                                                         Double =
                                                                             new
-                                                                                StringReplace()
+                                                                                StringReplace
                                                                                 {
                                                                                     String =
                                                                                         new
@@ -218,7 +217,7 @@ public partial class UssecSchemaExamples
             "OCRPATH"
         )
         .Properties(
-            new Dictionary<string, JsonSchema>()
+            new Dictionary<string, JsonSchema>
             {
                 { "FIRSTBATES", AnyString }, //First Bates number of native file document/email
                 { "LASTBATES", AnyString },  //Last Bates number of native file document/email

@@ -1,7 +1,6 @@
 ﻿using AutoTheory;
 using Json.Schema;
 using Reductech.Sequence.Core.Entities;
-using Reductech.Sequence.Core.Internal.Serialization;
 using Xunit;
 using static Reductech.Sequence.Core.TestHarness.SchemaHelpers;
 using static Reductech.Sequence.Connectors.StructuredData.Tests.SchemaExamples.SchemaHelpers;
@@ -38,7 +37,7 @@ public partial class EDRMSchemaExamples
             "RCRDTYPE"
         )
         .Properties(
-            new Dictionary<string, JsonSchema>()
+            new Dictionary<string, JsonSchema>
             {
                 { "ATTACHMENTIDS", AnyString }, //Docids of attachment(s) to email/edoc
 
