@@ -10,13 +10,7 @@ public partial class ToYamlTests : StepTestBase<ToYaml, StringStream>
             yield return new StepCase(
                 "Single Property",
                 new ToYaml { Entity = Constant(Entity.Create(("Foo", 1))) },
-                "Foo: 1"
-            );
-
-            yield return new StepCase(
-                "Single Property Formatted",
-                new ToYaml { Entity = Constant(Entity.Create(("Foo", 1))) },
-                "Foo: 1"
+                "Foo: 1\r\n"
             );
 
             yield return new StepCase(
@@ -27,7 +21,7 @@ public partial class ToYamlTests : StepTestBase<ToYaml, StringStream>
                         Entity.Create(("Foo", 1), ("Bar", new[] { "a", "b", "c" }))
                     )
                 },
-                "Foo: 1\r\nBar:\r\n- a\r\n- b\r\n- c"
+                "Bar:\r\n- a\r\n- b\r\n- c\r\nFoo: 1\r\n"
             );
 
             yield return new StepCase(
@@ -36,13 +30,13 @@ public partial class ToYamlTests : StepTestBase<ToYaml, StringStream>
                 {
                     Entity = Constant(
                         Entity.Create(
-                            ("Foo", 1),
-                            ("Bar", new[] { "a", "b", "c" }),
-                            ("Baz", Entity.Create(("Foo", 2), ("Bar", new[] { "d", "e", "f" })))
+                            ("Foo1", 1),
+                            ("Bar1", new[] { "a", "b", "c" }),
+                            ("Baz", Entity.Create(("Foo2", 2), ("Bar2", new[] { "d", "e", "f" })))
                         )
                     )
                 },
-                "Foo: 1\r\nBar:\r\n- a\r\n- b\r\n- c\r\nBaz:\r\n  Foo: 2\r\n  Bar:\r\n  - d\r\n  - e\r\n  - f"
+                "Bar1: - a - b - c Baz: Bar2: - d - e - f Foo2: 2 Foo1: 1\r\n"
             );
         }
     }

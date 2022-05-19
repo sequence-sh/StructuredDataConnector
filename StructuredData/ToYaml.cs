@@ -21,7 +21,10 @@ public sealed class ToYaml : CompoundStep<StringStream>
         var entity = result.Value;
         var cso    = entity.ToCSharpObject();
 
-        var serializer = new Serializer();
+        var settings = new SerializerSettings();
+        settings.EmitTags = false;
+
+        var serializer = new Serializer(settings);
 
         var yaml = serializer.Serialize(cso);
 
