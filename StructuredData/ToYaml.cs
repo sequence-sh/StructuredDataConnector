@@ -1,5 +1,4 @@
-﻿using System.Text.Json;
-using System.Text.Json.Serialization;
+﻿using SharpYaml.Serialization;
 
 namespace Reductech.Sequence.Connectors.StructuredData;
 
@@ -14,23 +13,19 @@ public sealed class ToYaml : CompoundStep<StringStream>
         IStateMonad stateMonad,
         CancellationToken cancellationToken)
     {
-        var result = await stateMonad.RunStepsAsync(Entity, FormatOutput, cancellationToken);
+        var result = await stateMonad.RunStepsAsync(Entity, cancellationToken);
 
         if (result.IsFailure)
             return result.ConvertFailure<StringStream>();
 
-        var (entity, writeIndented) = result.Value;
+        var entity = result.Value;
+        var cso    = entity.ToCSharpObject();
 
-        var jsonString = JsonSerializer.Serialize(
-            entity,
-            new JsonSerializerOptions()
-            {
-                Converters    = { new JsonStringEnumConverter(), VersionJsonConverter.Instance },
-                WriteIndented = writeIndented
-            }
-        );
+        var serializer = new Serializer();
 
-        return new StringStream(jsonString);
+        var yaml = serializer.Serialize(cso);
+
+        return new StringStream(yaml);
     }
 
     /// <summary>
@@ -39,13 +34,6 @@ public sealed class ToYaml : CompoundStep<StringStream>
     [StepProperty(1)]
     [Required]
     public IStep<Entity> Entity { get; set; } = null!;
-
-    /// <summary>
-    /// Whether to indent to the Json output
-    /// </summary>
-    [StepProperty(2)]
-    [DefaultValueExplanation("true")]
-    public IStep<SCLBool> FormatOutput { get; set; } = new SCLConstant<SCLBool>(SCLBool.True);
 
     /// <inheritdoc />
     public override IStepFactory StepFactory { get; } =
