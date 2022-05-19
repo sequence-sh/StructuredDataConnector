@@ -10,7 +10,7 @@ public partial class ToXmlTests : StepTestBase<ToXml, StringStream>
             yield return new StepCase(
                 "Single Property",
                 new ToXml { Entity = Constant(Entity.Create(("Foo", 1))) },
-                "<root>\n\t<Foo>1</Foo>\n</root>"
+                "<?xml version=\"1.0\" encoding=\"utf-8\"?> <root>\n\t<Foo>1</Foo>\n</root>"
             );
 
             yield return new StepCase(
@@ -21,7 +21,7 @@ public partial class ToXmlTests : StepTestBase<ToXml, StringStream>
                         Entity.Create(("Foo", 1), ("Bar", new[] { "a", "b", "c" }))
                     )
                 },
-                "<root>\n\t<Foo>1</Foo>\n\t<Bar>a</Bar>\n\t<Bar>b</Bar>\n\t<Bar>c</Bar>\n</root>"
+                "<?xml version=\"1.0\" encoding=\"utf-8\"?> <root>\n\t<Foo>1</Foo>\n\t<Bar>\n\t<Element>a</Element>\n\t<Element>b</Element>\n\t<Element>c</Element>\n</Bar>\n</root>"
             );
 
             yield return new StepCase(
@@ -36,7 +36,7 @@ public partial class ToXmlTests : StepTestBase<ToXml, StringStream>
                         )
                     ),
                 },
-                "<root>\n\t<Foo>1</Foo>\n\t<Bar>a</Bar>\n\t<Bar>b</Bar>\n\t<Bar>c</Bar>\n\t<Baz>\n\t\t<Foo>1</Foo>\n\t\t<Bar>d</Bar>\n\t\t<Bar>e</Bar>\n\t\t<Bar>f</Bar>\n\t</Baz>\n</root>"
+                "<?xml version=\"1.0\" encoding=\"utf-8\"?> <root>\n\t<Foo>1</Foo>\n\t<Bar>\n\t<Element>a</Element>\n\t<Element>b</Element>\n\t<Element>c</Element>\n</Bar>\n\t<Baz>\n\t\t<Foo>2</Foo>\n\t\t<Bar>\n\t<Element>d</Element>\n\t<Element>e</Element>\n\t<Element>f</Element>\n</Bar>\n\t</Baz>\n</root>"
             );
         }
     }
