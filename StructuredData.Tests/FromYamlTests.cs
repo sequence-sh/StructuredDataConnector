@@ -1,6 +1,6 @@
 ﻿namespace Reductech.Sequence.Connectors.StructuredData.Tests;
 
-public partial class FromJsonTests : StepTestBase<FromJson, Entity>
+public partial class FromYamlTests : StepTestBase<FromYaml, Entity>
 {
     /// <inheritdoc />
     protected override IEnumerable<StepCase> StepCases
@@ -9,22 +9,22 @@ public partial class FromJsonTests : StepTestBase<FromJson, Entity>
         {
             yield return new StepCase(
                 "Single Property",
-                new FromJson { Stream = Constant("{\"Foo\":1}") },
+                new FromYaml { Stream = Constant("Foo: 1") },
                 Entity.Create(("Foo", 1))
             );
 
             yield return new StepCase(
                 "List property",
-                new FromJson { Stream = Constant(@"{""Foo"":1,""Bar"":[""a"",""b"",""c""]}") },
+                new FromYaml { Stream = Constant("Foo: 1\r\nBar:\r\n- a\r\n- b\r\n- c") },
                 Entity.Create(("Foo", 1), ("Bar", new[] { "a", "b", "c" }))
             );
 
             yield return new StepCase(
                 "Nested Entities",
-                new FromJson
+                new FromYaml
                 {
                     Stream = Constant(
-                        @"{""Foo"":1,""Bar"":[""a"",""b"",""c""],""Baz"":{""Foo"":2,""Bar"":[""d"",""e"",""f""]}}"
+                        "Foo: 1\r\nBar:\r\n- a\r\n- b\r\n- c\r\nBaz:\r\n  Foo: 2\r\n  Bar:\r\n  - d\r\n  - e\r\n  - f"
                     )
                 },
                 Entity.Create(
@@ -43,8 +43,8 @@ public partial class FromJsonTests : StepTestBase<FromJson, Entity>
         {
             yield return new ErrorCase(
                 "Invalid Json",
-                new FromJson { Stream = Constant("My Invalid Json") },
-                ErrorCode.CouldNotParse.ToErrorBuilder("My Invalid Json", "JSON")
+                new FromYaml { Stream = Constant("My Invalid Yaml") },
+                ErrorCode.CouldNotParse.ToErrorBuilder("My Invalid Yaml", "YAML")
             );
 
             foreach (var ec in base.ErrorCases)

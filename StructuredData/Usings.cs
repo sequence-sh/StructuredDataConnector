@@ -8,3 +8,8 @@ global using Reductech.Sequence.Core.Util;
 global using System.Threading;
 global using System.Threading.Tasks;
 global using CSharpFunctionalExtensions;
+global using Reductech.Sequence.Core.Entities;
+global using Reductech.Sequence.Core.Internal.Errors;
+global using Entity = Reductech.Sequence.Core.Entity;
+global using Reductech.Sequence.Connectors.StructuredData.Util;
+global using Reductech.Sequence.Core.Enums;

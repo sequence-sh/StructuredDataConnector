@@ -59,7 +59,7 @@ public partial class FromJsonArrayTests : StepTestBase<FromJsonArray, Array<Enti
         {
             yield return new ErrorCase(
                 "Invalid Json",
-                new FromJsonArray() { Stream = Constant("My Invalid Json") },
+                new FromJsonArray { Stream = Constant("My Invalid Json") },
                 ErrorCode.CouldNotParse.ToErrorBuilder("My Invalid Json", "JSON")
             );
 

@@ -9,7 +9,7 @@ public partial class ToJsonArrayTests : StepTestBase<ToJsonArray, StringStream>
         {
             yield return new StepCase(
                 "Single Property",
-                new ToJsonArray()
+                new ToJsonArray
                 {
                     Entities = Array(Entity.Create(("Foo", 1))), FormatOutput = Constant(false)
                 },
@@ -18,7 +18,7 @@ public partial class ToJsonArrayTests : StepTestBase<ToJsonArray, StringStream>
 
             yield return new StepCase(
                 "Single Property Formatted",
-                new ToJsonArray()
+                new ToJsonArray
                 {
                     Entities = Array(Entity.Create(("Foo", 1))), FormatOutput = Constant(true)
                 },
@@ -27,7 +27,7 @@ public partial class ToJsonArrayTests : StepTestBase<ToJsonArray, StringStream>
 
             yield return new StepCase(
                 "Two Entities",
-                new ToJsonArray()
+                new ToJsonArray
                 {
                     Entities     = Array(Entity.Create(("Foo", 1)), Entity.Create(("Foo", 2))),
                     FormatOutput = Constant(false)
@@ -37,7 +37,7 @@ public partial class ToJsonArrayTests : StepTestBase<ToJsonArray, StringStream>
 
             yield return new StepCase(
                 "List property",
-                new ToJsonArray()
+                new ToJsonArray
                 {
                     Entities = Array(
                         Entity.Create(("Foo", 1), ("Bar", new[] { "a", "b", "c" }))
@@ -49,7 +49,7 @@ public partial class ToJsonArrayTests : StepTestBase<ToJsonArray, StringStream>
 
             yield return new StepCase(
                 "Nested Entities",
-                new ToJsonArray()
+                new ToJsonArray
                 {
                     Entities = Array(
                         Entity.Create(

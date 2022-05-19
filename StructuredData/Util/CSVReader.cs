@@ -4,9 +4,6 @@ using System.IO;
 using System.Linq;
 using CsvHelper;
 using CsvHelper.Configuration;
-using Reductech.Sequence.Core.Enums;
-using Reductech.Sequence.Core.Internal.Errors;
-using Entity = Reductech.Sequence.Core.Entity;
 
 namespace Reductech.Sequence.Connectors.StructuredData.Util;
 

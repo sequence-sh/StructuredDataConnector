@@ -1,9 +1,4 @@
-﻿using Reductech.Sequence.Connectors.StructuredData.Util;
-using Reductech.Sequence.Core.Enums;
-using Reductech.Sequence.Core.Internal.Errors;
-using Entity = Reductech.Sequence.Core.Entity;
-
-namespace Reductech.Sequence.Connectors.StructuredData;
+﻿namespace Reductech.Sequence.Connectors.StructuredData;
 
 /// <summary>
 /// Write entities to a stream in concordance format.

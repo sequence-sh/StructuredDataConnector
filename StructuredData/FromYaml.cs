@@ -1,13 +1,13 @@
-﻿using System.Text.Json;
-using System.Text.Json.Serialization;
-using Microsoft.Extensions.Logging;
+﻿using Microsoft.Extensions.Logging;
+using SharpYaml.Serialization;
 
 namespace Reductech.Sequence.Connectors.StructuredData;
 
 /// <summary>
-/// Extracts the entity from a Json stream containing a single entity.
+/// Extracts the entity from a Yaml stream containing a single entity.
 /// </summary>
-public sealed class FromJson : CompoundStep<Entity>
+[Alias("FromYml")]
+public sealed class FromYaml : CompoundStep<Entity>
 {
     /// <inheritdoc />
     protected override async Task<Result<Entity, IError>> Run(
@@ -20,33 +20,28 @@ public sealed class FromJson : CompoundStep<Entity>
         if (text.IsFailure)
             return text.ConvertFailure<Entity>();
 
-        Entity? entity;
+        Dictionary<string, object>? dictionary;
 
         try
         {
-            entity = JsonSerializer.Deserialize<Entity>(
-                text.Value,
-                new JsonSerializerOptions()
-                {
-                    Converters =
-                    {
-                        new JsonStringEnumConverter(), VersionJsonConverter.Instance
-                    }
-                }
-            );
+            var serializer = new Serializer(new SerializerSettings() { });
+
+            dictionary = serializer.Deserialize<Dictionary<string, object>>(text.Value);
         }
         catch (Exception e)
         {
             stateMonad.Log(LogLevel.Error, e.Message, this);
-            entity = null;
+            dictionary = null;
         }
 
-        if (entity is null)
+        if (dictionary is null)
             return
                 Result.Failure<Entity, IError>(
-                    ErrorCode.CouldNotParse.ToErrorBuilder(text.Value, "JSON")
+                    ErrorCode.CouldNotParse.ToErrorBuilder(text.Value, "YAML")
                         .WithLocation(this)
                 );
+
+        var entity = Entity.Create(dictionary);
 
         return entity;
     }
@@ -60,5 +55,5 @@ public sealed class FromJson : CompoundStep<Entity>
 
     /// <inheritdoc />
     public override IStepFactory StepFactory { get; } =
-        new SimpleStepFactory<FromJson, Entity>();
+        new SimpleStepFactory<FromYaml, Entity>();
 }
