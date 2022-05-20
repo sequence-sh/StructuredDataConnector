@@ -4,23 +4,30 @@ using System.Xml.Linq;
 namespace Reductech.Sequence.Connectors.StructuredData;
 
 /// <summary>
-/// Writes an entity to a stream in XML format
+/// Write entities to a stream in Xml format.
 /// </summary>
-public sealed class ToXml : CompoundStep<StringStream>
+public sealed class ToXmlArray : CompoundStep<StringStream>
 {
     /// <inheritdoc />
     protected override async Task<Result<StringStream, IError>> Run(
         IStateMonad stateMonad,
         CancellationToken cancellationToken)
     {
-        var result = await stateMonad.RunStepsAsync(Entity, cancellationToken);
+        var result = await stateMonad.RunStepsAsync(Entities, cancellationToken);
 
         if (result.IsFailure)
             return result.ConvertFailure<StringStream>();
 
-        var root = XmlMethods.ToXmlElement("root", result.Value).AsT0; //Will always be a T0
+        var xElements = XmlMethods.ToXmlElement("entity", result.Value).AsT1; //Will always be a T1
 
         var ms = new MemoryStream();
+
+        var root = new XElement("root");
+
+        foreach (var xElement in xElements)
+        {
+            root.Add(xElement);
+        }
 
         await root.SaveAsync(ms, SaveOptions.None, cancellationToken);
 
@@ -28,13 +35,13 @@ public sealed class ToXml : CompoundStep<StringStream>
     }
 
     /// <summary>
-    /// The entity to write.
+    /// The entities to write.
     /// </summary>
     [StepProperty(1)]
     [Required]
-    public IStep<Entity> Entity { get; set; } = null!;
+    public IStep<Array<Entity>> Entities { get; set; } = null!;
 
     /// <inheritdoc />
     public override IStepFactory StepFactory { get; } =
-        new SimpleStepFactory<ToXml, StringStream>();
+        new SimpleStepFactory<ToXmlArray, StringStream>();
 }
