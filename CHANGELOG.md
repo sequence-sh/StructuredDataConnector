@@ -4,9 +4,13 @@
 
 ### Steps
 
-- Added `FromXML` `ToXML` `FromXMLArray` `ToXMLArray`
-- Added `FromYaml` 
-- Added `ToYaml`
+- Added steps to convert XML and YAML to/from entities
+  - `FromXML`
+  - `ToXML`
+  - `FromXMLArray`
+  - `ToXMLArray`
+  - `FromYaml` 
+  - `ToYaml`
 
 ## Issues Closed in this Release
 
