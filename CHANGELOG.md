@@ -1,3 +1,20 @@
+# v0.15.0 (2022-05-27)
+
+## Summary of Changes
+
+### Steps
+
+- Added `FromXML` `ToXML` `FromXMLArray` `ToXMLArray`
+- Added `FromYaml` 
+- Added `ToYaml`
+
+## Issues Closed in this Release
+
+### New Features
+
+- Add steps to convert to/from XML #58
+- Add steps to convert to/from YAML #57
+
 # v0.14.0 (2022-03-25)
 
 Maintenance release - dependency updates only.
@@ -82,6 +99,7 @@ First release. Versions numbers are aligned with Core.
 - Enable publish to connector registry #3
 - Update Core dependecies #2
 - Move in steps and tests from Core #1
+
 
 
 
