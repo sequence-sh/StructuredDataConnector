@@ -38,7 +38,7 @@
     <PackageReference Include="Reductech.Sequence.Core" Version="0.16.0-a.main.2206131338">
       <ExcludeAssets>runtime</ExcludeAssets>
     </PackageReference>
-    <PackageReference Include="SharpYaml" Version="1.9.1" />
+    <PackageReference Include="SharpYaml" Version="1.9.2" />
   </ItemGroup>
 
   <ItemGroup Condition="$(PackConnector) != ''">
