@@ -35,7 +35,7 @@
 
   <ItemGroup>
     <PackageReference Include="CsvHelper" Version="27.2.1" />
-    <PackageReference Include="Reductech.Sequence.Core" Version="0.16.0-a.main.2207040113">
+    <PackageReference Include="Reductech.Sequence.Core" Version="0.16.0-a.main.2207041537">
       <ExcludeAssets>runtime</ExcludeAssets>
     </PackageReference>
     <PackageReference Include="SharpYaml" Version="1.9.2" />
