@@ -1,6 +1,8 @@
 # v0.16.0 (2022-07-13)
 
-Maintenance release - dependency updates only.
+- Enabled [Source Link](https://docs.microsoft.com/en-us/dotnet/standard/library-guidance/sourcelink)
+- Enabled publish to [Nuget.org](https://www.nuget.org) including symbols
+- Update Core to v0.16.0
 
 # v0.15.0 (2022-05-27)
 
@@ -13,7 +15,7 @@ Maintenance release - dependency updates only.
   - `ToXML`
   - `FromXMLArray`
   - `ToXMLArray`
-  - `FromYaml` 
+  - `FromYaml`
   - `ToYaml`
 
 ## Issues Closed in this Release
@@ -107,8 +109,3 @@ First release. Versions numbers are aligned with Core.
 - Enable publish to connector registry #3
 - Update Core dependecies #2
 - Move in steps and tests from Core #1
-
-
-
-
-
