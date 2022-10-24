@@ -128,7 +128,7 @@ public static class CSVWriter
             {
                 var s = Format(entityProperty.Value, delimiter, dateTimeFormat);
 
-                expandoObject[entityProperty.Name] = s;
+                expandoObject[entityProperty.Key.Inner] = s;
             }
 
             return expandoObject;

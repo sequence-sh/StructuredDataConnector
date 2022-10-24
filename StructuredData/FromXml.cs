@@ -8,7 +8,7 @@ namespace Reductech.Sequence.Connectors.StructuredData;
 public sealed class FromXml : CompoundStep<Entity>
 {
     /// <inheritdoc />
-    protected override async Task<Result<Entity, IError>> Run(
+    protected override async ValueTask<Result<Entity, IError>> Run(
         IStateMonad stateMonad,
         CancellationToken cancellationToken)
     {
@@ -41,7 +41,7 @@ public sealed class FromXml : CompoundStep<Entity>
         if (sclObject is Entity entity)
             return entity;
 
-        var result = Entity.Create((Entity.PrimitiveKey, sclObject));
+        var result = Entity.CreatePrimitive(sclObject);
         return result;
     }
 

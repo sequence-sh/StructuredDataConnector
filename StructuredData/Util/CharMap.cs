@@ -1,5 +1,4 @@
 ﻿using System.Linq;
-using Reductech.Sequence.Core.Internal.Errors;
 
 namespace Reductech.Sequence.Connectors.StructuredData.Util;
 
@@ -28,7 +27,7 @@ public record CharMap : IStepValueMap<StringStream, char?>
     }
 
     /// <inheritdoc />
-    public async Task<Result<char?, IError>> Map(
+    public async ValueTask<Result<char?, IError>> Map(
         StringStream t,
         CancellationToken cancellationToken)
     {

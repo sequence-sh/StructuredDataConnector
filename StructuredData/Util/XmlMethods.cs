@@ -1,4 +1,5 @@
-﻿using System.Linq;
+﻿using System.Collections.Immutable;
+using System.Linq;
 using System.Xml;
 using System.Xml.Linq;
 using OneOf;
@@ -17,30 +18,32 @@ internal class XmlMethods
 
         if (element.HasElements)
         {
-            var l = new List<EntityProperty>();
+            var keys   = ImmutableArray.CreateBuilder<EntityKey>();
+            var values = ImmutableArray.CreateBuilder<ISCLObject>();
+            //var l = new List<EntityProperty>();
 
             //this is an entity
             foreach (var group in element.Elements().GroupBy(x => x.Name))
             {
+                keys.Add(new EntityKey(group.Key.LocalName));
+
                 if (group.Count() == 1)
                 {
                     var value = ToSCLObject(group.Single());
-                    l.Add(new EntityProperty(group.Key.LocalName, value, l.Count));
+                    values.Add(value);
                 }
                 else
                 {
                     var array = group.Select(ToSCLObject).ToSCLArray();
-                    l.Add(new EntityProperty(group.Key.LocalName, array, l.Count));
+                    values.Add(array);
                 }
             }
 
-            var entity = new Entity(l);
+            var entity = new Entity(keys.ToImmutable(), values.ToImmutable());
             return entity;
         }
-        else
-        {
-            return new StringStream(element.Value);
-        }
+
+        return new StringStream(element.Value);
     }
 
     public static OneOf<XElement, XElement[]> ToXmlElement(string name, ISCLObject obj)
@@ -53,7 +56,7 @@ internal class XmlMethods
 
                 foreach (var ep in entity)
                 {
-                    var child = ToXmlElement(ep.Name, ep.Value);
+                    var child = ToXmlElement(ep.Key.Inner, ep.Value);
 
                     if (child.TryPickT0(out var singleElement, out var list))
 

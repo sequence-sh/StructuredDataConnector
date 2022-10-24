@@ -13,3 +13,4 @@ global using Reductech.Sequence.Core.Internal.Errors;
 global using Entity = Reductech.Sequence.Core.Entity;
 global using Reductech.Sequence.Connectors.StructuredData.Util;
 global using Reductech.Sequence.Core.Enums;
+global using CSharpFunctionalExtensions.ValueTasks;

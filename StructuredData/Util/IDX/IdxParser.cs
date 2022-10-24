@@ -1,4 +1,5 @@
-﻿using System.Linq;
+﻿using System.Collections.Immutable;
+using System.Linq;
 using System.Text.RegularExpressions;
 
 namespace Reductech.Sequence.Connectors.StructuredData.Util.IDX;
@@ -57,9 +58,8 @@ public record IdxParser(IdxParserConfiguration Config)
         if (string.IsNullOrWhiteSpace(input))
             return ErrorCode.CouldNotParse.ToErrorBuilder("", "IDX");
 
-        var propertyList = new Dictionary<string, EntityProperty>();
-
-        var currentOrder = 0;
+        var keys   = ImmutableArray.CreateBuilder<EntityKey>();
+        var values = new List<ISCLObject>();
 
         void AddField(string fieldName, string fieldValue)
         {
@@ -69,33 +69,25 @@ public record IdxParser(IdxParserConfiguration Config)
             if (fieldMatch.Success)
                 fieldName = fieldMatch.Groups["name"].Value;
 
-            if (propertyList.TryGetValue(fieldName, out var ep))
-            {
-                var combinedValue = Combine(ep.Value, newValue);
+            var key = new EntityKey(fieldName);
 
-                propertyList[fieldName] =
-                    new EntityProperty(
-                        fieldName,
-                        combinedValue,
-                        currentOrder
-                    );
+            var index = keys.IndexOf(key);
+
+            if (index < 0)
+            {
+                keys.Add(new EntityKey(fieldName));
+                values.Add(newValue);
             }
             else
             {
-                propertyList.Add(
-                    fieldName,
-                    new EntityProperty(
-                        fieldName,
-                        newValue,
-                        currentOrder
-                    )
-                );
-            }
+                var existingValue = values[index];
+                var combinedValue = Combine(existingValue, newValue);
 
-            currentOrder++;
+                values[index] = combinedValue;
+            }
         }
 
-        foreach (string fieldBlock in input.Split(Config.FieldDelimiter))
+        foreach (var fieldBlock in input.Split(Config.FieldDelimiter))
         {
             // skip any potential empty lines at the start of the document
             if (string.IsNullOrWhiteSpace(fieldBlock))
@@ -163,10 +155,7 @@ public record IdxParser(IdxParserConfiguration Config)
             }
         }
 
-        var newPropertyValues = propertyList.Values.OrderBy(x => x.Order)
-            .Select((x, i) => new EntityProperty(x.Name, x.Value, i));
-
-        var entity = new Entity(newPropertyValues);
+        var entity = new Entity(keys.ToImmutable(), values.ToImmutableArray());
         return entity;
     }
 }
