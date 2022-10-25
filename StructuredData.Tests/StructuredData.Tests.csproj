@@ -19,7 +19,7 @@
 
   <ItemGroup>
     <PackageReference Include="Microsoft.NET.Test.Sdk" Version="17.3.2" />
-    <PackageReference Include="Reductech.Sequence.Core.TestHarness" Version="0.18.0-a.main.2210240110" />
+    <PackageReference Include="Reductech.Sequence.Core.TestHarness" Version="0.18.0-a.main.2210251207" />
     <PackageReference Include="xunit" Version="2.4.2" />
     <PackageReference Include="xunit.runner.visualstudio" Version="2.4.5">
       <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
@@ -36,7 +36,6 @@
   </ItemGroup>
 
   <ItemGroup>
-    <ProjectReference Include="..\..\core\Core.TestHarness\Core.TestHarness.csproj" />
     <ProjectReference Include="..\StructuredData\StructuredData.csproj" />
   </ItemGroup>
 
