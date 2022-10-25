@@ -71,12 +71,12 @@ public static class IDXSerializer
                 );
         }
 
-        foreach (var entityProperty in entity)
+        foreach (var (key, value) in entity)
         {
-            if (!DREFieldsSet.Contains(entityProperty.Name))
+            if (!DREFieldsSet.Contains(key.Inner))
             {
                 var fieldValue = new SpecialField(
-                    $"{DREField} {entityProperty.Name}",
+                    $"{DREField} {key.Inner}",
                     StringHandling.Quote,
                     false,
                     true,
@@ -85,7 +85,7 @@ public static class IDXSerializer
 
                 var v = TryAppendValue(
                     stringBuilder,
-                    entityProperty.Value,
+                    value,
                     fieldValue
                 );
 

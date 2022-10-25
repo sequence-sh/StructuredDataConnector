@@ -1,4 +1,5 @@
-﻿using System.Dynamic;
+﻿using System.Collections.Immutable;
+using System.Dynamic;
 using System.Globalization;
 using System.IO;
 using System.Linq;
@@ -16,7 +17,7 @@ public static class CSVReader
     /// Reads a CSV stream to an entity stream based on all the input steps.
     /// </summary>
     /// <returns></returns>
-    public static async Task<Result<Array<Entity>, IError>> ReadCSV(
+    public static async ValueTask<Result<Array<Entity>, IError>> ReadCSV(
         IStateMonad stateMonad,
         IStep<StringStream> stream,
         IStep<StringStream> delimiter,
@@ -100,14 +101,21 @@ public static class CSVReader
 
         var reader = new CsvReader(textReader, configuration);
 
+        //reader.ReadHeader();
+
+        //var headerRecord = reader.HeaderRecord;
+        var headers = new Lazy<ImmutableArray<EntityKey>>(
+            () => reader.HeaderRecord.Select(x => new EntityKey(x)).ToImmutableArray()
+        );
+
         await foreach (var row in reader.GetRecordsAsync<dynamic>())
         {
             ExpandoObject eo = row;
 
-            (string, object?)[] values =
-                eo.Select(x => (x.Key, GetValue(x.Value))).ToArray();
+            var values = eo.Select(x => ISCLObject.CreateFromCSharpObject(GetValue(x.Value)))
+                .ToImmutableArray();
 
-            var entity = Entity.Create(values);
+            var entity = new Entity(headers.Value, values);
             yield return entity;
         }
 
