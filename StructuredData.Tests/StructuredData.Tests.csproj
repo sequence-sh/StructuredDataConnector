@@ -36,6 +36,7 @@
   </ItemGroup>
 
   <ItemGroup>
+    <ProjectReference Include="..\..\core\Core.TestHarness\Core.TestHarness.csproj" />
     <ProjectReference Include="..\StructuredData\StructuredData.csproj" />
   </ItemGroup>
 

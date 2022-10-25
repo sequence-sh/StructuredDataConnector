@@ -60,6 +60,10 @@
     <PackageReference Include="SharpYaml" Version="2.1.0" />
   </ItemGroup>
 
+  <ItemGroup>
+    <ProjectReference Include="..\..\core\Core\Core.csproj" />
+  </ItemGroup>
+
   <PropertyGroup Condition="$(PackConnector) != ''">
     <CopyLocalLockFileAssemblies>true</CopyLocalLockFileAssemblies>
     <PackageLicenseFile>LICENSE</PackageLicenseFile>

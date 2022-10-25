@@ -10,7 +10,7 @@ namespace Reductech.Sequence.Connectors.StructuredData;
 public sealed class FromJson : CompoundStep<Entity>
 {
     /// <inheritdoc />
-    protected override async Task<Result<Entity, IError>> Run(
+    protected override async ValueTask<Result<Entity, IError>> Run(
         IStateMonad stateMonad,
         CancellationToken cancellationToken)
     {
@@ -41,14 +41,16 @@ public sealed class FromJson : CompoundStep<Entity>
             entity = null;
         }
 
-        if (entity is null)
-            return
-                Result.Failure<Entity, IError>(
-                    ErrorCode.CouldNotParse.ToErrorBuilder(text.Value, "JSON")
-                        .WithLocation(this)
-                );
+        if (entity.HasValue)
+        {
+            return entity.Value;
+        }
 
-        return entity;
+        return
+            Result.Failure<Entity, IError>(
+                ErrorCode.CouldNotParse.ToErrorBuilder(text.Value, "JSON")
+                    .WithLocation(this)
+            );
     }
 
     /// <summary>

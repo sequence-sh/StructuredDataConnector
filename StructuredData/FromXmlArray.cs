@@ -9,7 +9,7 @@ namespace Reductech.Sequence.Connectors.StructuredData;
 public sealed class FromXmlArray : CompoundStep<Array<Entity>>
 {
     /// <inheritdoc />
-    protected override async Task<Result<Array<Entity>, IError>> Run(
+    protected override async ValueTask<Result<Array<Entity>, IError>> Run(
         IStateMonad stateMonad,
         CancellationToken cancellationToken)
     {
@@ -41,12 +41,12 @@ public sealed class FromXmlArray : CompoundStep<Array<Entity>>
 
         if (sclObject is Entity entity)
         {
-            if (entity.Dictionary.Count == 1
-             && entity.Dictionary.Single().Value.Value is IArray array)
+            if (entity.Headers.Length == 1
+             && entity.Values.Single() is IArray array)
             {
                 var array2 = array.ListIfEvaluated()
                     .Value
-                    .Select(x => x as Entity ?? Entity.Create((Entity.PrimitiveKey, x)))
+                    .Select(x => x is Entity e ? e : Entity.CreatePrimitive(x))
                     .ToSCLArray();
 
                 return array2;
@@ -55,7 +55,7 @@ public sealed class FromXmlArray : CompoundStep<Array<Entity>>
             return new EagerArray<Entity>(new[] { entity });
         }
 
-        var result = Entity.Create((Entity.PrimitiveKey, sclObject));
+        var result = Entity.CreatePrimitive(sclObject);
         return new EagerArray<Entity>(new[] { result });
     }
 
