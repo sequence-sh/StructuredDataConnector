@@ -1,6 +1,6 @@
 ﻿using System.Xml.Linq;
 
-namespace Reductech.Sequence.Connectors.StructuredData;
+namespace Sequence.Connectors.StructuredData;
 
 /// <summary>
 /// Extracts the entity from a Xml stream containing a single entity.

@@ -1,7 +1,7 @@
 ﻿using System.Linq;
 using System.Text;
 
-namespace Reductech.Sequence.Connectors.StructuredData.Util.IDX;
+namespace Sequence.Connectors.StructuredData.Util.IDX;
 
 /// <summary>
 /// Contains methods for serializing entities to IDX

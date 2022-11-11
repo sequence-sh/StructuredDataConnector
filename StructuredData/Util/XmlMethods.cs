@@ -4,7 +4,7 @@ using System.Xml;
 using System.Xml.Linq;
 using OneOf;
 
-namespace Reductech.Sequence.Connectors.StructuredData.Util;
+namespace Sequence.Connectors.StructuredData.Util;
 
 /// <summary>
 /// Contains methods to help with xml conversion

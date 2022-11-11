@@ -1,4 +1,4 @@
-﻿namespace Reductech.Sequence.Connectors.StructuredData;
+﻿namespace Sequence.Connectors.StructuredData;
 
 /// <summary>
 /// Extracts entities from a Concordance stream.

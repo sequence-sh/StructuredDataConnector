@@ -1,6 +1,6 @@
-﻿using Reductech.Sequence.Connectors.StructuredData.Util.IDX;
+﻿using Sequence.Connectors.StructuredData.Util.IDX;
 
-namespace Reductech.Sequence.Connectors.StructuredData;
+namespace Sequence.Connectors.StructuredData;
 
 /// <summary>
 /// Write an entity to a stream in IDX format.

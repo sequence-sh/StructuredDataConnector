@@ -3,15 +3,15 @@ using System.Threading.Tasks;
 using AutoTheory;
 using Divergic.Logging.Xunit;
 using Json.Schema;
-using Reductech.Sequence.Core.Abstractions;
-using Reductech.Sequence.Core.Entities;
-using Reductech.Sequence.Core.Enums;
-using Reductech.Sequence.Core.Steps;
+using Sequence.Core.Abstractions;
+using Sequence.Core.Entities;
+using Sequence.Core.Enums;
+using Sequence.Core.Steps;
 using Xunit;
-using static Reductech.Sequence.Core.TestHarness.SchemaHelpers;
-using static Reductech.Sequence.Connectors.StructuredData.Tests.SchemaExamples.SchemaHelpers;
+using static Sequence.Core.TestHarness.SchemaHelpers;
+using static Sequence.Connectors.StructuredData.Tests.SchemaExamples.SchemaHelpers;
 
-namespace Reductech.Sequence.Connectors.StructuredData.Tests.SchemaExamples;
+namespace Sequence.Connectors.StructuredData.Tests.SchemaExamples;
 
 [UseTestOutputHelper]
 public partial class UssecSchemaExamples

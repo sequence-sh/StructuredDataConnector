@@ -39,7 +39,7 @@ https://sequence.sh/playground
 
 # Package Releases
 
-Can be downloaded from the [Releases page](https://gitlab.com/reductech/sequence/connectors/structureddata/-/releases).
+Can be downloaded from the [Releases page](https://gitlab.com/sequence/connectors/structureddata/-/releases).
 
 # NuGet Packages
 

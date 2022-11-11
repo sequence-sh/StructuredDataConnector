@@ -2,7 +2,7 @@
 using System.Text.Json.Serialization;
 using Microsoft.Extensions.Logging;
 
-namespace Reductech.Sequence.Connectors.StructuredData;
+namespace Sequence.Connectors.StructuredData;
 
 /// <summary>
 /// Extracts entities from a Json stream containing an array of entities.

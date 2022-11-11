@@ -1,7 +1,7 @@
 ﻿using System.Text.Json;
 using System.Text.Json.Serialization;
 
-namespace Reductech.Sequence.Connectors.StructuredData;
+namespace Sequence.Connectors.StructuredData;
 
 /// <summary>
 /// Writes an entity to a stream in JSON format

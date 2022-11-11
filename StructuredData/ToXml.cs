@@ -1,7 +1,7 @@
 ﻿using System.IO;
 using System.Xml.Linq;
 
-namespace Reductech.Sequence.Connectors.StructuredData;
+namespace Sequence.Connectors.StructuredData;
 
 /// <summary>
 /// Writes an entity to a stream in XML format

@@ -1,6 +1,6 @@
-﻿using Reductech.Sequence.Core.Steps;
+﻿using Sequence.Core.Steps;
 
-namespace Reductech.Sequence.Connectors.StructuredData.Tests;
+namespace Sequence.Connectors.StructuredData.Tests;
 
 public partial class ToConcordanceTests : StepTestBase<ToConcordance, StringStream>
 {

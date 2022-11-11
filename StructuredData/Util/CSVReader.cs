@@ -6,7 +6,7 @@ using System.Linq;
 using CsvHelper;
 using CsvHelper.Configuration;
 
-namespace Reductech.Sequence.Connectors.StructuredData.Util;
+namespace Sequence.Connectors.StructuredData.Util;
 
 /// <summary>
 /// Helps read blocks

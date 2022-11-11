@@ -16,7 +16,7 @@ using System.Globalization;
 using System.Resources;
 using System.Runtime.CompilerServices;
 
-namespace Reductech.Sequence.Connectors.StructuredData.Tests.SchemaExamples {
+namespace Sequence.Connectors.StructuredData.Tests.SchemaExamples {
 
 /// <summary>
     ///   A strongly-typed resource class, for looking up localized strings, etc.
@@ -45,7 +45,7 @@ namespace Reductech.Sequence.Connectors.StructuredData.Tests.SchemaExamples {
         internal static ResourceManager ResourceManager {
             get {
                 if (ReferenceEquals(resourceMan, null)) {
-                    ResourceManager temp = new ResourceManager("Reductech.Sequence.Connectors.StructuredData.Tests.SchemaExamples.Examples", typeof(Examples).Assembly);
+                    ResourceManager temp = new ResourceManager("Sequence.Connectors.StructuredData.Tests.SchemaExamples.Examples", typeof(Examples).Assembly);
                     resourceMan = temp;
                 }
                 return resourceMan;
