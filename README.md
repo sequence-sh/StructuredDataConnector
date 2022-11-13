@@ -1,4 +1,4 @@
-# Sequence® StructuredData Connector
+# Sequence StructuredData Connector
 
 [Sequence®](https://sequence.sh) is a collection of libraries for
 automation of cross-application e-discovery and forensic workflows.
