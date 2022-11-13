@@ -65,7 +65,7 @@ public static class IDXSerializer
                     return v;
             }
             else if (dreField.Mandatory)
-                return ErrorCode.SchemaViolation.ToErrorBuilder(
+                return ErrorCode.SchemaViolated.ToErrorBuilder(
                     dreField.Name,
                     entity
                 );
