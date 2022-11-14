@@ -1,6 +1,6 @@
 ﻿using System.Linq;
 
-namespace Reductech.Sequence.Connectors.StructuredData.Util;
+namespace Sequence.Connectors.StructuredData.Util;
 
 /// <summary>
 /// Maps string streams to characters

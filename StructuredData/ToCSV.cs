@@ -1,4 +1,4 @@
-﻿namespace Reductech.Sequence.Connectors.StructuredData;
+﻿namespace Sequence.Connectors.StructuredData;
 
 /// <summary>
 /// Write entities to a stream in CSV format.

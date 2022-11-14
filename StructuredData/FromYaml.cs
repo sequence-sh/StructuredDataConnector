@@ -1,7 +1,7 @@
 ﻿using Microsoft.Extensions.Logging;
 using SharpYaml.Serialization;
 
-namespace Reductech.Sequence.Connectors.StructuredData;
+namespace Sequence.Connectors.StructuredData;
 
 /// <summary>
 /// Extracts the entity from a Yaml stream containing a single entity.

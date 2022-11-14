@@ -7,7 +7,7 @@ using CsvHelper;
 using CsvHelper.Configuration;
 using CsvHelper.TypeConversion;
 
-namespace Reductech.Sequence.Connectors.StructuredData.Util;
+namespace Sequence.Connectors.StructuredData.Util;
 
 /// <summary>
 /// Helper methods for writing CSV files

@@ -1,7 +1,7 @@
 ﻿using System.Linq;
 using System.Text;
 
-namespace Reductech.Sequence.Connectors.StructuredData.Util.IDX;
+namespace Sequence.Connectors.StructuredData.Util.IDX;
 
 /// <summary>
 /// Contains methods for serializing entities to IDX
@@ -12,11 +12,13 @@ public static class IDXSerializer
     /// Convert this entity to an IDX Document.
     /// Will fail if the entity contains nested entities or doubly nested lists.
     /// </summary>
-    public static Result<string, IErrorBuilder> TryConvertToIDXDocument(this Entity entity)
+    public static Result<string, IErrorBuilder> TryConvertToIDXDocument(
+        this Entity entity,
+        int rowNumber)
     {
         var stringBuilder = new StringBuilder();
 
-        var r = TryAppendValues(entity, stringBuilder);
+        var r = TryAppendValues(entity, rowNumber, stringBuilder);
 
         if (r.IsFailure)
             return r.ConvertFailure<string>();
@@ -31,11 +33,13 @@ public static class IDXSerializer
     /// Convert this entity to IDX Data.
     /// Will fail if the entity contains nested entities or doubly nested lists.
     /// </summary>
-    public static Result<string, IErrorBuilder> TryConvertToIDXData(this Entity entity)
+    public static Result<string, IErrorBuilder> TryConvertToIDXData(
+        this Entity entity,
+        int rowNumber)
     {
         var stringBuilder = new StringBuilder();
 
-        var r = TryAppendValues(entity, stringBuilder);
+        var r = TryAppendValues(entity, rowNumber, stringBuilder);
 
         if (r.IsFailure)
             return r.ConvertFailure<string>();
@@ -47,6 +51,7 @@ public static class IDXSerializer
 
     private static Result<Unit, IErrorBuilder> TryAppendValues(
         Entity entity,
+        int rowNumber,
         StringBuilder stringBuilder)
     {
         foreach (var dreField in OrderedDREFields)
@@ -65,8 +70,10 @@ public static class IDXSerializer
                     return v;
             }
             else if (dreField.Mandatory)
-                return ErrorCode.SchemaViolation.ToErrorBuilder(
+                return ErrorCode.SchemaViolated.ToErrorBuilder(
                     dreField.Name,
+                    nameof(SpecialField.Mandatory),
+                    rowNumber,
                     entity
                 );
         }

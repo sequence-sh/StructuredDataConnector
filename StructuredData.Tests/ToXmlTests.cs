@@ -1,4 +1,4 @@
-﻿namespace Reductech.Sequence.Connectors.StructuredData.Tests;
+﻿namespace Sequence.Connectors.StructuredData.Tests;
 
 public partial class ToXmlTests : StepTestBase<ToXml, StringStream>
 {

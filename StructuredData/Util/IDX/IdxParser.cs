@@ -2,7 +2,7 @@
 using System.Linq;
 using System.Text.RegularExpressions;
 
-namespace Reductech.Sequence.Connectors.StructuredData.Util.IDX;
+namespace Sequence.Connectors.StructuredData.Util.IDX;
 
 /// <summary>
 /// The Idx parser configuration
