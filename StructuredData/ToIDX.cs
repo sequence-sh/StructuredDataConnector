@@ -26,9 +26,9 @@ public sealed class ToIDX : CompoundStep<StringStream>
         Result<string, IErrorBuilder> result;
 
         if (toDocumentResult.Value)
-            result = entity.Value.TryConvertToIDXDocument();
+            result = entity.Value.TryConvertToIDXDocument(0);
         else
-            result = entity.Value.TryConvertToIDXData();
+            result = entity.Value.TryConvertToIDXData(0);
 
         if (result.IsFailure)
             return result.MapError(x => x.WithLocation(this)).ConvertFailure<StringStream>();
