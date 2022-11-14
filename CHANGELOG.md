@@ -1,3 +1,11 @@
+# v0.18.0 (2022-11-14)
+
+## Issues Closed in this Release
+
+### Other
+
+- Update namespace and paths after move to Sequence group #133
+
 # v0.17.0 (2022-08-29)
 
 Maintenance release - dependency updates only.
@@ -113,3 +121,4 @@ First release. Versions numbers are aligned with Core.
 - Enable publish to connector registry #3
 - Update Core dependecies #2
 - Move in steps and tests from Core #1
+
