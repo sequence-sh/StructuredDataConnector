@@ -72,7 +72,7 @@ public static class CSVReader
         {
             Delimiter                = delimiter,
             Encoding                 = encodingEnum.Convert(),
-            SanitizeForInjection     = false,
+            InjectionOptions         = InjectionOptions.Escape,
             DetectColumnCountChanges = false,
             ReadingExceptionOccurred = HandleException,
             BadDataFound             = BadDataFound
