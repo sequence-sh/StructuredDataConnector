@@ -89,7 +89,7 @@ public static class CSVWriter
         {
             Delimiter                = delimiter,
             Encoding                 = encoding,
-            SanitizeForInjection     = false,
+            InjectionOptions         = InjectionOptions.Escape,
             DetectColumnCountChanges = false
         };
 
